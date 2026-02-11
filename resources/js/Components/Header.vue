@@ -2,7 +2,7 @@
 
 </script>
 <template>
-    <header class="h-screen bg-[url('@/assets/images/bg-header.jpg')] bg-cover bg-center flex items-center justify-center">
+    <header class="h-screen bg-[url('@/assets/images/bg-header.jpg')] bg-cover bg-fixed bg-center flex items-center justify-center">
         <div class="text-center text-white px-4">
             <h1 class="text-4xl md:text-6xl font-bold mb-4">Bienvenue sur MadAgency</h1>
             <p class="text-lg md:text-2xl mb-8">Votre partenaire de confiance pour des solutions digitales innovantes</p>
