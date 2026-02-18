@@ -1,5 +1,5 @@
 <script setup>
-
+    
 </script>
 <template>
     <header class="h-screen bg-[url('@/assets/images/bg-header.jpg')] bg-cover bg-fixed bg-center flex items-center justify-center">

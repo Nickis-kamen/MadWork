@@ -62,7 +62,7 @@ const activeService = ref(0)
     <!-- Services Section -->
     <section id="services" class="relative py-20 bg-gray-200">
         <!-- Éléments décoratifs légers -->
-        <div class="absolute top-0 left-0 w-full h-64 bg-linear-to-b from-[#1e002f]/5 to-transparent"></div>
+        <div class="absolute top-0 left-0 w-full h-64 bg-gradient-to-b from-[#1e002f]/5 to-transparent"></div>
 
         <div class="relative container mx-auto px-4">
             <!-- En-tête de section -->
@@ -85,10 +85,10 @@ const activeService = ref(0)
             <div class="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-6">
                 <div v-for="(service, index) in services" :key="service.id"
                     class="relative group bg-[url('@/assets/images/3265223.jpg')] bg-cover rounded-xl p-6 shadow-md hover:shadow-xl transition-all duration-300 border border-white/10 hover:border-white/30 hover:-translate-y-1">
-                    <div class="absolute inset-0 bg-linear-to-br from-[#1e002f]/70 to-[#c10e46]/70 rounded-xl"></div>
+                    <div class="absolute inset-0 bg-gradient-to-br from-[#1e002f]/70 to-[#c10e46]/70 rounded-xl"></div>
                     <div class="relative z-10 flex flex-col h-full">
                         <!-- Icône -->
-                        <div class="w-16 h-16 bg-linear-to-br from-white/10 to-white/5 rounded-lg flex items-center justify-center border border-white/20 mb-4">
+                        <div class="w-16 h-16 bg-gradient-to-br from-white/10 to-white/5 rounded-lg flex items-center justify-center border border-white/20 mb-4">
                             <svg v-if="service.icon === 'presentation'" class="w-9 h-9 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9" />
                             </svg>

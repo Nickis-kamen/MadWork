@@ -4,7 +4,7 @@
 
 <template>
     <!-- About Section -->
-    <section id="about" class="relative bg-linear-to-br from-[#1e002f] to-[#2c0047] py-24 overflow-hidden">
+    <section id="about" class="relative bg-gradient-to-br from-[#1e002f] to-[#2c0047] py-24 overflow-hidden">
 
         <!-- Éléments décoratifs -->
         <div class="absolute top-0 right-0 w-96 h-96 bg-[#c10e46] opacity-10 rounded-full blur-3xl"></div>

@@ -1,6 +1,6 @@
 <script setup>
 import { Link } from '@inertiajs/vue3';
-import logo from '@/assets/logo/logo.png';
+import ApplicationLogo from './ApplicationLogo.vue';
 
 </script>
 
@@ -10,7 +10,7 @@ import logo from '@/assets/logo/logo.png';
             <div class="flex justify-between items-center">
                 <!-- Logo -->
                 <Link href="/" class="flex items-center">
-                    <img :src="logo" alt="Logo" class="h-20 w-auto">
+                    <ApplicationLogo />
                 </Link>
                 <div class="flex items-center space-x-8">
 
@@ -23,16 +23,16 @@ import logo from '@/assets/logo/logo.png';
                             Accueil
                         </Link>
                         <Link
-                            href="/dashboard"
+                            href="/about"
+                            class="text-white hover:text-pink-600 hover:bg-pink-50 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
+                        >
+                            A propos
+                        </Link>
+                        <Link
+                            href="/services"
                             class="text-white hover:text-pink-600 hover:bg-pink-50 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
                         >
                             Services
-                        </Link>
-                        <Link
-                            href="/profile"
-                            class="text-white hover:text-pink-600 hover:bg-pink-50 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
-                        >
-                            Profile
                         </Link>
                     </div>
                 </div>
