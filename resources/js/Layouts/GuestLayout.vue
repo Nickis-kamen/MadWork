@@ -11,7 +11,7 @@ import { Link } from '@inertiajs/vue3';
     <Nav />
 
         <div
-        class="mt-6 w-full overflow-hidden bg-white px-8 py-6 shadow-md sm:max-w-md sm:rounded-lg"
+        class="md:mt-6 w-full overflow-hidden bg-white px-8 py-6 shadow-md md:max-w-lg sm:max-w-md sm:rounded-lg"
         >
             <div class="flex justify-center">
                 <Link href="/">
