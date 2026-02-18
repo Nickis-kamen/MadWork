@@ -28,24 +28,45 @@ class RegisteredUserController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request)
     {
         $request->validate([
             'name' => 'required|string|max:255',
+            'first_name' => 'required|string|max:255',
             'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'image' => [ 'nullable','image', 'max:5120'],
+            'phone' => 'required|string|max:20',
+            'address' => 'required|string|max:255',
+            'date_of_birth' => 'required|date'
         ]);
+
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $path = $file->store('uploads/users', 'public');
+        }else {
+            $path = null;
+        }
 
         $user = User::create([
             'name' => $request->name,
+            'first_name' => $request->first_name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'image' => $path,
+            'phone' => $request->phone,
+            'address' => $request->address,
+            'date_of_birth' => $request->date_of_birth,
+            'role' => 'customer',
         ]);
 
         event(new Registered($user));
 
         Auth::login($user);
 
-        return redirect(route('dashboard', absolute: false));
+        // if (Auth::user()->role === 'admin') {
+        //     return redirect(route('admin.dashboard', absolute: false));
+        // }
+        // return redirect(route('customer.dashboard', absolute: false));
     }
 }

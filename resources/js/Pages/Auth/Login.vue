@@ -6,13 +6,11 @@ import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
+import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 
 defineProps({
     canResetPassword: {
         type: Boolean,
-    },
-    status: {
-        type: String,
     },
 });
 
@@ -31,9 +29,10 @@ const submit = () => {
 <template>
     <GuestLayout>
         <Head title="Connexion" />
-
-        <div v-if="status" class="mb-4 text-sm font-medium text-green-600">
-            {{ status }}
+        <div class="flex justify-center">
+            <Link href="/">
+                <ApplicationLogo class=""/>
+            </Link>
         </div>
         <h2 class="text-2xl font-bold text-gray-800 text-center mb-4">Connexion</h2>
         <form @submit.prevent="submit">
@@ -83,14 +82,16 @@ const submit = () => {
             >
                 Connexion
             </PrimaryButton>
-            <div class="flex items-center gap-2 mt-4">
-                <p class="text-gray-800">Vouz n'avez pas encore de compte ?</p>
-                <Link
-                    :href="route('register')"
-                    class="text-pink-600 underline hover:text-pink-900"
-                >
-                    Inscrivez-vous
-                </Link>
+            <div class="text-center mt-2">
+                <p class="text-xs text-gray-600">
+                    Pas de compte ?
+                    <Link
+                        href="/register"
+                        class="text-pink-600 underline hover:text-pink-900"
+                    >
+                        Inscription
+                    </Link>
+                </p>
             </div>
         </form>
     </GuestLayout>
