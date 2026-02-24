@@ -20,6 +20,7 @@
         "vue": "^3.4.0"
     },
     "dependencies": {
-        "lucide-vue-next": "^0.574.0"
+        "lucide-vue-next": "^0.574.0",
+        "vue3-toastify": "^0.2.8"
     }
 }

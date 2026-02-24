@@ -37,44 +37,83 @@ onUnmounted(() => {
 const page = usePage();
 const currentRoute = computed(() => page.url);
 
+// Authentification
+const user = computed(() => usePage().props.auth.user)
+
+const isAdmin = computed(() => user.value?.role === 'admin')
+const isCustomer = computed(() => user.value?.role === 'customer')
+
 // Définition des liens du menu
-const menuItems = [
-    {
-        id: 'dashboard',
-        name: 'Tableau de bord',
-        href: '/admin/dashboard',
-        icon: LayoutDashboard,
-        badge: 0
-    },
-    {
-        id: 'requests',
-        name: 'Demandes Devis',
-        href: '/admin/requests',
-        icon: FileText,
-        badge: 3
-    },
-    {
-        id: 'projects',
-        name: 'Projets Actifs',
-        href: '/admin/projects',
-        icon: Folder,
-        badge: 0
-    },
-    {
-        id: 'staff',
-        name: 'Équipe',
-        href: '/admin/staff',
-        icon: Users,
-        badge: 0
-    },
-    {
-        id: 'clients',
-        name: 'Clients',
-        href: '/admin/clients',
-        icon: UserCircle,
-        badge: 0
-    },
-];
+let menuItems = [];
+
+if(isAdmin.value){
+    menuItems = [
+        {
+            id: 'dashboard',
+            name: 'Tableau de bord',
+            href: '/admin/dashboard',
+            icon: LayoutDashboard,
+            badge: 0
+        },
+        {
+            id: 'requests',
+            name: 'Demandes Devis',
+            href: '/admin/requests',
+            icon: FileText,
+            badge: 3
+        },
+        {
+            id: 'projects',
+            name: 'Projets Actifs',
+            href: '/admin/projects',
+            icon: Folder,
+            badge: 0
+        },
+        {
+            id: 'staff',
+            name: 'Équipe',
+            href: '/admin/staff',
+            icon: Users,
+            badge: 0
+        },
+        {
+            id: 'clients',
+            name: 'Clients',
+            href: '/admin/clients',
+            icon: UserCircle,
+            badge: 0
+        },
+    ];
+
+}
+
+if(isCustomer.value){
+    menuItems = [
+        {
+            id: 'dashboard',
+            name: 'Tableau de bord',
+            href: '/customer/dashboard',
+            icon: LayoutDashboard,
+            badge: 0
+        },
+        {
+            id: 'devis',
+            name: 'Mes Devis',
+            href: '/customer/devis',
+            icon: FileText,
+            badge: 3
+        },
+        {
+            id: 'projects',
+            name: 'Projets Actifs',
+            href: '/customer/projects',
+            icon: Folder,
+            badge: 0
+        },
+    ];
+}
+
+const role = computed(() => user.value?.role)
 
 const isActive = (href) => {
     if (href === '/admin/dashboard') {
@@ -82,8 +121,6 @@ const isActive = (href) => {
     }
     return currentRoute.value === href || currentRoute.value.startsWith(href + '/');
 };
-
-const adminName = 'Admin';
 
 const handleNavigation = () => {
   if (isMobile.value) {
@@ -112,19 +149,21 @@ const toggleSidebar = () => {
         }"></div>
 
         <div class="relative z-10 flex flex-col h-full">
-            <!-- Header avec infos admin -->
+            <!-- Header avec infos -->
             <div class="p-4 border-b flex-shrink-0" :style="{ borderColor: 'rgba(193,14,70,0.2)', background: 'linear-gradient(90deg, rgba(193,14,70,0.1) 0%, rgba(30,0,47,0.1) 100%)' }">
             <div class="flex items-center justify-between">
                 <div v-if="!isCollapsed" class="flex items-center space-x-3 min-w-0">
-                <!-- Avatar admin -->
+                <!-- Avatar -->
                 <div class="relative flex-shrink-0">
-                    <ApplicationLogoMini />
+                    <Link href="/">
+                        <ApplicationLogoMini />
+                    </Link>
                 </div>
 
-                <!-- Infos admin -->
+                <!-- Info -->
                 <div class="flex flex-col min-w-0 flex-1">
-                    <span class="font-bold text-sm truncate" style="color: #c10e46">Espace Admin</span>
-                    <span class="text-xs font-medium truncate" style="color: rgba(255,255,255,0.7)">{{ adminName }}</span>
+                    <span class="font-bold text-sm truncate" style="color: #c10e46">Espace {{ role === 'admin' ? 'Administrateur' : role === 'dev' ? 'Développeur' : 'Client' }}</span>
+                    <span class="text-xs font-medium truncate" style="color: rgba(255,255,255,0.7)">{{ user?.name || "Not found" }}</span>
                 </div>
                 </div>
 
@@ -206,32 +245,32 @@ const toggleSidebar = () => {
 
             <!-- Section déconnexion -->
             <div class="relative z-10 flex-shrink-0">
-            <Link
-                href="/logout"
-                method="post"
-                as="button"
-                class="w-full flex items-center cursor-pointer transition-all duration-200 border-t group"
-                :class="isCollapsed && !isMobile ? 'justify-center px-4 py-4' : 'space-x-3 px-4 py-3'"
-                :style="{
-                borderColor: 'rgba(193,14,70,0.2)',
-                background: 'linear-gradient(90deg, rgba(193,14,70,0.1) 0%, rgba(30,0,47,0.1) 100%)'
-                }"
-            >
-                <!-- Icône déconnexion -->
-                <div class="relative flex-shrink-0 flex items-center justify-center"
-                    :class="isCollapsed && !isMobile ? 'w-5 h-5' : ''">
-                    <LogOut
-                        class="group-hover:scale-110 transition-transform duration-200"
-                        :class="isCollapsed && !isMobile ? 'w-5 h-5' : 'w-5 h-5'"
-                        :style="{ color: '#c10e46' }"
-                    />
-                </div>
+                <Link
+                    href="/logout"
+                    method="post"
+                    as="button"
+                    class="w-full flex items-center cursor-pointer transition-all duration-200 border-t group"
+                    :class="isCollapsed && !isMobile ? 'justify-center px-4 py-4' : 'space-x-3 px-4 py-3'"
+                    :style="{
+                    borderColor: 'rgba(193,14,70,0.2)',
+                    background: 'linear-gradient(90deg, rgba(193,14,70,0.1) 0%, rgba(30,0,47,0.1) 100%)'
+                    }"
+                >
+                    <!-- Icône déconnexion -->
+                    <div class="relative flex-shrink-0 flex items-center justify-center"
+                        :class="isCollapsed && !isMobile ? 'w-5 h-5' : ''">
+                        <LogOut
+                            class="group-hover:scale-110 transition-transform duration-200"
+                            :class="isCollapsed && !isMobile ? 'w-5 h-5' : 'w-5 h-5'"
+                            :style="{ color: '#c10e46' }"
+                        />
+                    </div>
 
-                <!-- Texte déconnexion -->
-                <span v-if="!isCollapsed || isMobile" class="font-semibold transition-colors duration-200 truncate" :style="{ color: 'rgba(255,255,255,0.7)' }">
-                    Déconnexion
-                </span>
-            </Link>
+                    <!-- Texte déconnexion -->
+                    <span v-if="!isCollapsed || isMobile" class="font-semibold transition-colors duration-200 truncate" :style="{ color: 'rgba(255,255,255,0.7)' }">
+                        Déconnexion
+                    </span>
+                </Link>
             </div>
         </div>
         </div>

@@ -51,4 +51,9 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function devis()
+    {
+        return $this->hasMany(Devis::class);
+    }
 }

@@ -1,7 +1,11 @@
 <script setup>
-import { ref } from 'vue';
 import Sidebar from '@/Components/Dashboard/Sidebar.vue';
+import { usePage } from '@inertiajs/vue3';
 import { ChevronDown } from 'lucide-vue-next';
+import { computed } from 'vue';
+
+const user = computed(() => usePage().props.auth.user);
+const role = computed(() => user.value?.role);
 
 </script>
 
@@ -14,7 +18,7 @@ import { ChevronDown } from 'lucide-vue-next';
                 <div class="flex items-center justify-between">
                     <div class="">
                         <h2 class="text-xl font-bold text-slate-800 capitalize">Tableau de bord</h2>
-                        <p class="text-sm text-slate-600">Bienvenue dans votre espace administrateur</p>
+                        <p class="text-sm text-slate-600">Bienvenue dans votre espace {{ role === 'admin' ? 'Administrateur' : role === 'dev' ? 'Développeur' : 'Client' }}</p>
                     </div>
                     <!-- Actions utilisateur -->
                     <div class="flex items-center space-x-4">
@@ -22,7 +26,8 @@ import { ChevronDown } from 'lucide-vue-next';
                         <div class="flex items-center space-x-3 group cursor-pointer">
                         <!-- Avatar -->
                             <div class="w-10 h-10 bg-gradient-to-br from-[#c10e46] to-[#1e002f] rounded-xl flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform">
-                                <span class="text-white font-semibold text-sm">A</span>
+                                <img v-if="user?.image" :src="`/storage/${user.image}`" alt="Avatar" class="w-full h-full rounded-xl object-cover">
+                                <span v-else class="text-white font-semibold text-sm">A</span>
                             </div>
                         <!-- Indicateur de menu -->
                         <ChevronDown class="w-4 h-4 text-slate-500 group-hover:text-pink-600 transition-colors" />

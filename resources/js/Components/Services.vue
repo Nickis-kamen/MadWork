@@ -120,7 +120,7 @@ const activeService = ref(0)
 
                         <span class="text-lg font-bold text-white mb-5">{{ service.price }}</span>
                         <div class="mt-auto">
-                            <Link href="/contact"
+                            <Link href="/devis"
                                 class="bg-white/10 text-white font-semibold text-lg flex items-center px-3 py-2 rounded-lg hover:bg-white/20 transition-colors duration-300 border border-white/10 hover:border-white/20">
                                 Demander un devis
                                 <svg class="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
