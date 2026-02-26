@@ -7,7 +7,7 @@ import 'vue3-toastify/dist/index.css';
 // Configuration par défaut des toasts
 const defaultOptions = {
     position: toast.POSITION.TOP_RIGHT,
-    autoClose: 3000,
+    autoClose: 5000,
     hideProgressBar: false,
     closeOnClick: true,
     pauseOnHover: true,

@@ -10,4 +10,5 @@ Route::group(['middleware' => 'customer', 'prefix' => 'customer', 'as' => 'custo
 {
     Route::get('dashboard', [DashboardController::class, 'index']) -> name('dashboard');
     Route::post('devis', [DevisController::class, 'store']) -> name('devis.store');
+    Route::get('devis', [DevisController::class, 'index']) -> name('devis');
 });

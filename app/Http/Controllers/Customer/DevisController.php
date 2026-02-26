@@ -45,7 +45,7 @@ class DevisController extends Controller
             'cdc_file' => $path,
         ]);
 
-        return redirect('/devis')->with([
+        return redirect('/customer/devis')->with([
             'message' => 'Demande de devis soumise avec succès !',
             'type' => 'success' // ou 'error', 'warning', 'info'
         ]);
