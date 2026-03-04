@@ -104,150 +104,91 @@ const isPending = (status) => status === 'pending';
             </div>
 
             <!-- Liste des devis -->
-            <div class="bg-white rounded-xl border" :style="{ borderColor: '#c10e4620' }">
-                <!-- En-tête (desktop) -->
-                <div class="hidden lg:grid lg:grid-cols-12 gap-4 p-4 border-b text-sm font-medium text-gray-500" :style="{ borderColor: '#c10e4620' }">
-                    <div class="col-span-1">#ID</div>
-                    <div class="col-span-3">Titre / Service</div>
-                    <div class="col-span-2">Date demande</div>
-                    <div class="col-span-2">Délai souhaité</div>
-                    <div class="col-span-2">Statut</div>
-                    <div class="col-span-2 text-right">Actions</div>
-                </div>
-
-                <!-- Lignes de devis -->
-                <div class="divide-y" :style="{ borderColor: '#c10e4620' }">
+            <div class="bg-white rounded-xl border overflow-hidden" :style="{ borderColor: '#c10e4620' }">
+                <!-- Version mobile (cartes) -->
+                <div class="block lg:hidden divide-y" :style="{ borderColor: '#c10e4620' }">
                     <div
                         v-for="devi in devis"
                         :key="devi.id"
                         class="p-4 hover:bg-gray-50 transition-colors"
                     >
-                        <!-- Version mobile -->
-                        <div class="lg:hidden space-y-3">
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center space-x-3">
-                                    <div
-                                        class="w-10 h-10 rounded-lg flex items-center justify-center"
-                                        :style="{ background: 'linear-gradient(135deg, #c10e4610 0%, #1e002f10 100%)' }"
-                                    >
-                                        <FileText class="w-5 h-5" :style="{ color: '#c10e46' }" />
-                                    </div>
-                                    <div>
-                                        <p class="font-semibold text-sm" :style="{ color: '#1e002f' }">{{ devi.title }}</p>
-                                        <p class="text-xs text-gray-500">#{{ devi.id }} • {{ devi.service_type }}</p>
-                                    </div>
-                                </div>
-                                <span
-                                    class="px-2 py-1 rounded-full text-xs font-medium flex items-center space-x-1"
-                                    :class="getStatusInfo(devi.status).bg"
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="flex items-center space-x-3">
+                                <div
+                                    class="w-10 h-10 rounded-lg flex items-center justify-center"
+                                    :style="{ background: 'linear-gradient(135deg, #c10e4610 0%, #1e002f10 100%)' }"
                                 >
-                                    <component :is="getStatusInfo(devi.status).icon" class="w-3 h-3 mr-1" :class="getStatusInfo(devi.status).color" />
-                                    <span :class="getStatusInfo(devi.status).color">{{ getStatusInfo(devi.status).label }}</span>
-                                </span>
-                            </div>
-
-                            <div class="grid grid-cols-2 gap-2 text-sm">
-                                <div>
-                                    <p class="text-gray-500 text-xs">Date demande</p>
-                                    <p class="font-medium text-xs" :style="{ color: '#1e002f' }">{{ formatDate(devi.created_at) }}</p>
+                                    <FileText class="w-5 h-5" :style="{ color: '#c10e46' }" />
                                 </div>
                                 <div>
-                                    <p class="text-gray-500 text-xs">Délai souhaité</p>
-                                    <p class="font-medium text-xs" :style="{ color: '#1e002f' }">{{ devi.delai }} jours</p>
+                                    <p class="font-semibold text-sm" :style="{ color: '#1e002f' }">{{ devi.title }}</p>
+                                    <p class="text-xs text-gray-500">{{ devi.service_type }}</p>
                                 </div>
                             </div>
+                            <span
+                                class="px-2 py-1 rounded-full text-xs font-medium inline-flex items-center"
+                                :class="getStatusInfo(devi.status).bg"
+                            >
+                                <component :is="getStatusInfo(devi.status).icon" class="w-3 h-3 mr-1" :class="getStatusInfo(devi.status).color" />
+                                <span :class="getStatusInfo(devi.status).color">{{ getStatusInfo(devi.status).label }}</span>
+                            </span>
+                        </div>
 
-                            <!-- Prix si proposé ou accepté -->
-                            <div v-if="devi.price && !isPending(devi.status)" class="flex items-center justify-between p-2 rounded-lg" :style="{ background: 'rgba(193,14,70,0.05)' }">
-                                <span class="text-xs text-gray-600">Montant proposé</span>
-                                <span class="font-semibold" :style="{ color: '#c10e46' }">{{ devi.price }} €</span>
+                        <div class="grid grid-cols-2 gap-3 text-sm mb-3">
+                            <div>
+                                <p class="text-gray-500 text-xs">Date demande</p>
+                                <p class="font-medium text-xs" :style="{ color: '#1e002f' }">{{ formatDate(devi.created_at) }}</p>
                             </div>
-
-                            <!-- Description courte -->
-                            <p class="text-xs text-gray-500 line-clamp-2">{{ devi.description }}</p>
-
-                            <div class="flex justify-end space-x-2 pt-2">
-                                <button
-                                    @click="openDetails(devi)"
-                                    class="p-2 rounded-lg border hover:bg-gray-100 transition-colors"
-                                    :style="{ borderColor: '#c10e4620' }"
-                                    title="Voir détails"
-                                >
-                                    <Eye class="w-4 h-4" :style="{ color: '#1e002f' }" />
-                                </button>
-                                <a
-                                    v-if="devi.cdc_file"
-                                    :href="`/storage/${devi.cdc_file}`"
-                                    download
-                                    class="p-2 rounded-lg border hover:bg-gray-100 transition-colors"
-                                    :style="{ borderColor: '#c10e4620' }"
-                                    title="Télécharger le cahier des charges"
-                                >
-                                    <Download class="w-4 h-4" :style="{ color: '#c10e46' }" />
-                                </a>
+                            <div>
+                                <p class="text-gray-500 text-xs">Délai souhaité</p>
+                                <p class="font-medium text-xs" :style="{ color: '#1e002f' }">{{ devi.delai }} jours</p>
+                            </div>
+                            <div>
+                                <p class="text-gray-500 text-xs">ID</p>
+                                <p class="font-medium text-xs font-mono" :style="{ color: '#1e002f' }">#{{ devi.id }}</p>
+                            </div>
+                            <div v-if="devi.price && !isPending(devi.status)">
+                                <p class="text-gray-500 text-xs">Montant</p>
+                                <p class="font-medium text-xs" :style="{ color: '#c10e46' }">{{ devi.price }} €</p>
                             </div>
                         </div>
 
-                        <!-- Version desktop -->
-                        <div class="hidden lg:grid lg:grid-cols-12 gap-4 items-center">
-                            <div class="col-span-1">
-                                <p class="text-sm font-mono" :style="{ color: '#1e002f' }">#{{ devi.id }}</p>
-                            </div>
-                            <div class="col-span-3">
-                                <div class="flex items-center space-x-3">
-                                    <div class="min-w-0">
-                                        <p class="font-medium text-sm truncate" :style="{ color: '#1e002f' }">{{ devi.title }}</p>
-                                        <p class="text-xs text-gray-500 truncate">{{ devi.service_type }}</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-span-2">
-                                <p class="text-sm text-gray-600">{{ formatDate(devi.created_at) }}</p>
-                            </div>
-                            <div class="col-span-2">
-                                <p class="text-sm" :style="{ color: '#1e002f' }">{{ devi.delai }} jours</p>
-                            </div>
-                            <div class="col-span-2">
-                                <span
-                                    class="px-2 py-1 rounded-full text-xs font-medium inline-flex items-center"
-                                    :class="getStatusInfo(devi.status).bg"
-                                >
-                                    <component :is="getStatusInfo(devi.status).icon" class="w-3 h-3 mr-1" :class="getStatusInfo(devi.status).color" />
-                                    <span :class="getStatusInfo(devi.status).color">{{ getStatusInfo(devi.status).label }}</span>
-                                </span>
-                            </div>
-                            <div class="col-span-2 flex justify-end space-x-2">
-                                <button
-                                    @click="openDetails(devi)"
-                                    class="p-2 rounded-lg border hover:bg-gray-100 transition-colors"
-                                    :style="{ borderColor: '#c10e4620' }"
-                                    title="Voir détails"
-                                >
-                                    <Eye class="w-4 h-4" :style="{ color: '#1e002f' }" />
-                                </button>
-                                <a
-                                    v-if="devi.cdc_file"
-                                    :href="`/storage/${devi.cdc_file}`"
-                                    download
-                                    class="p-2 rounded-lg border hover:bg-gray-100 transition-colors"
-                                    :style="{ borderColor: '#c10e4620' }"
-                                    title="Télécharger le cahier des charges"
-                                >
-                                    <Download class="w-4 h-4" :style="{ color: '#c10e46' }" />
-                                </a>
-                                <Link
-                                    v-if="devi.status === 'proposed'"
-                                    :href="`/devis/${devi.id}/reponse`"
-                                    class="px-3 py-1 text-xs rounded-lg border hover:bg-gray-50 transition-colors"
-                                    :style="{ borderColor: '#c10e4620', color: '#c10e46' }"
-                                >
-                                    Répondre
-                                </Link>
-                            </div>
+                        <!-- Description courte -->
+                        <p class="text-xs text-gray-500 line-clamp-2 mb-3">{{ devi.description }}</p>
+
+                        <div class="flex justify-end space-x-2">
+                            <button
+                                @click="openDetails(devi)"
+                                class="p-2 rounded-lg border hover:bg-gray-100 transition-colors inline-flex items-center"
+                                :style="{ borderColor: '#c10e4620' }"
+                                title="Voir détails"
+                            >
+                                <Eye class="w-4 h-4" :style="{ color: '#1e002f' }" />
+                                <span class="ml-2 text-sm" :style="{ color: '#1e002f' }">Détails</span>
+                            </button>
+                            <a
+                                v-if="devi.cdc_file"
+                                :href="`/storage/${devi.cdc_file}`"
+                                download
+                                class="p-2 rounded-lg border hover:bg-gray-100 transition-colors inline-flex items-center"
+                                :style="{ borderColor: '#c10e4620' }"
+                                title="Télécharger le cahier des charges"
+                            >
+                                <Download class="w-4 h-4" :style="{ color: '#c10e46' }" />
+                                <span class="ml-2 text-sm" :style="{ color: '#c10e46' }">PDF</span>
+                            </a>
+                            <Link
+                                v-if="devi.status === 'proposed'"
+                                :href="`/devis/${devi.id}/reponse`"
+                                class="px-3 py-2 text-xs rounded-lg border hover:bg-gray-50 transition-colors inline-flex items-center"
+                                :style="{ borderColor: '#c10e4620', color: '#c10e46' }"
+                            >
+                                Répondre
+                            </Link>
                         </div>
                     </div>
 
-                    <!-- Message si aucun devis -->
+                    <!-- Message si aucun devis (mobile) -->
                     <div v-if="devis.length === 0" class="p-12 text-center">
                         <FileText class="w-16 h-16 mx-auto text-gray-300 mb-4" />
                         <p class="text-gray-500 text-lg mb-2">Aucun devis pour le moment</p>
@@ -263,6 +204,117 @@ const isPending = (status) => status === 'pending';
                             <span>Créer votre premier devis</span>
                         </Link>
                     </div>
+                </div>
+
+                <!-- Version desktop (tableau) -->
+                <div class="hidden lg:block overflow-x-auto">
+                    <table class="min-w-full divide-y" :style="{ borderColor: '#c10e4620' }">
+                        <!-- En-tête -->
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Titre / Service</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date demande</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Délai souhaité</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Montant</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
+                                <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                            </tr>
+                        </thead>
+                        <!-- Corps du tableau -->
+                        <tbody class="bg-white divide-y" :style="{ borderColor: '#c10e4620' }">
+                            <tr v-for="devi in devis" :key="devi.id" class="hover:bg-gray-50 transition-colors">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-mono" :style="{ color: '#1e002f' }">
+                                    #{{ devi.id }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="flex-shrink-0 h-8 w-8">
+                                            <div
+                                                class="h-8 w-8 rounded-lg flex items-center justify-center"
+                                                :style="{ background: 'linear-gradient(135deg, #c10e4610 0%, #1e002f10 100%)' }"
+                                            >
+                                                <FileText class="w-4 h-4" :style="{ color: '#c10e46' }" />
+                                            </div>
+                                        </div>
+                                        <div class="ml-3">
+                                            <p class="text-sm font-medium" :style="{ color: '#1e002f' }">{{ devi.title }}</p>
+                                            <p class="text-xs text-gray-500">{{ devi.service_type }}</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                                    {{ formatDate(devi.created_at) }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                                    {{ devi.delai }} jours
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                    <span v-if="devi.price && !isPending(devi.status)" :style="{ color: '#c10e46' }" class="font-semibold">
+                                        {{ devi.price }} €
+                                    </span>
+                                    <span v-else class="text-gray-400">-</span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span
+                                        class="px-2 py-1 rounded-full text-xs font-medium inline-flex items-center"
+                                        :class="getStatusInfo(devi.status).bg"
+                                    >
+                                        <component :is="getStatusInfo(devi.status).icon" class="w-3 h-3 mr-1" :class="getStatusInfo(devi.status).color" />
+                                        <span :class="getStatusInfo(devi.status).color">{{ getStatusInfo(devi.status).label }}</span>
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                    <div class="flex justify-end space-x-2">
+                                        <button
+                                            @click="openDetails(devi)"
+                                            class="p-2 rounded-lg border hover:bg-gray-100 transition-colors inline-flex items-center"
+                                            :style="{ borderColor: '#c10e4620' }"
+                                            title="Voir détails"
+                                        >
+                                            <Eye class="w-4 h-4" :style="{ color: '#1e002f' }" />
+                                        </button>
+                                        <a
+                                            v-if="devi.cdc_file"
+                                            :href="`/storage/${devi.cdc_file}`"
+                                            download
+                                            class="p-2 rounded-lg border hover:bg-gray-100 transition-colors inline-flex items-center"
+                                            :style="{ borderColor: '#c10e4620' }"
+                                            title="Télécharger le cahier des charges"
+                                        >
+                                            <Download class="w-4 h-4" :style="{ color: '#c10e46' }" />
+                                        </a>
+                                        <Link
+                                            v-if="devi.status === 'proposed'"
+                                            :href="`/devis/${devi.id}/reponse`"
+                                            class="px-3 py-2 text-xs rounded-lg border hover:bg-gray-50 transition-colors inline-flex items-center"
+                                            :style="{ borderColor: '#c10e4620', color: '#c10e46' }"
+                                        >
+                                            Répondre
+                                        </Link>
+                                    </div>
+                                </td>
+                            </tr>
+                            <!-- Message si aucun devis (desktop) -->
+                            <tr v-if="devis.length === 0">
+                                <td colspan="7" class="px-6 py-12 text-center">
+                                    <FileText class="w-16 h-16 mx-auto text-gray-300 mb-4" />
+                                    <p class="text-gray-500 text-lg mb-2">Aucun devis pour le moment</p>
+                                    <p class="text-gray-400 text-sm mb-6">Vous n'avez pas encore fait de demande de devis</p>
+                                    <Link
+                                        href="/devis/creer"
+                                        class="inline-flex items-center space-x-2 px-6 py-3 text-white rounded-xl hover:shadow-lg transition-all duration-200 hover:scale-105 font-semibold shadow-md"
+                                        :style="{
+                                            background: 'linear-gradient(135deg, #c10e46 0%, #1e002f 100%)'
+                                        }"
+                                    >
+                                        <Plus class="w-4 h-4" />
+                                        <span>Créer votre premier devis</span>
+                                    </Link>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>

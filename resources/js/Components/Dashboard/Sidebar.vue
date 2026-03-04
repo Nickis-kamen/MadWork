@@ -79,7 +79,7 @@ if(isAdmin.value){
         {
             id: 'clients',
             name: 'Clients',
-            href: '/admin/clients',
+            href: '/admin/customers',
             icon: UserCircle,
             badge: 0
         },
