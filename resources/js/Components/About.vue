@@ -18,33 +18,23 @@
                     <!-- Badge -->
                     <div class="inline-flex items-center bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full">
                         <span class="w-2 h-2 bg-[#c10e46] rounded-full mr-2"></span>
-                        <span class="text-sm font-semibold tracking-wider">À PROPOS DE MADAGENCY</span>
+                        <span class="text-sm font-semibold tracking-wider">À PROPOS DE MADWORK</span>
                     </div>
 
                     <!-- Titre principal -->
-                    <h2 class="text-4xl md:text-5xl font-bold leading-tight">
-                        Nous transformons vos
-                        <span class="text-[#c10e46]">idées</span>
-                        <br />en réalités digitales
-                    </h2>
-
-                    <!-- Description -->
-                    <p class="text-lg text-gray-300 leading-relaxed">
-                        Fondée en 2020, MadAgency est bien plus qu'une simple agence web.
-                        Nous sommes une équipe de créatifs, développeurs et stratèges passionnés,
-                        unis par une mission commune : propulser votre marque vers de nouveaux sommets
-                        à travers des solutions digitales innovantes et sur-mesure.
+                    <p class="text-2xl md:text-4xl font-bold leading-tight">
+                        Nous Connectons des <span class="text-[#c10e46]">Clients</span> ayant des besoins digitaux avec des <span class="text-[#c10e46]">agences</span> spécialisées
                     </p>
 
                     <!-- Statistiques -->
                     <div class="grid grid-cols-3 gap-4 pt-6">
                         <div class="text-center">
                             <div class="text-3xl md:text-4xl font-bold text-[#c10e46]">50+</div>
-                            <div class="text-sm text-gray-400 mt-1">Projets réalisés</div>
+                            <div class="text-sm text-gray-400 mt-1">Nombre de clients</div>
                         </div>
                         <div class="text-center">
                             <div class="text-3xl md:text-4xl font-bold text-[#c10e46]">25+</div>
-                            <div class="text-sm text-gray-400 mt-1">Clients satisfaits</div>
+                            <div class="text-sm text-gray-400 mt-1">Nombre d'agences</div>
                         </div>
                         <div class="text-center">
                             <div class="text-3xl md:text-4xl font-bold text-[#c10e46]">4.9</div>
@@ -55,7 +45,7 @@
                     <!-- Bouton CTA -->
                     <div class="pt-4">
                         <a href="#contact" class="inline-flex items-center group bg-pink-600 hover:bg-pink-700 text-white px-8 py-4 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105">
-                            Rencontrons-nous
+                            Contactez-nous
                             <svg class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                             </svg>
@@ -77,7 +67,7 @@
                 </div>
             </div>
 
-            <div class="grid md:grid-cols-3 gap-6 mt-24">
+            <!-- <div class="grid md:grid-cols-3 gap-6 mt-24">
                 <div class="bg-white/5 backdrop-blur-sm p-6 rounded-xl border border-white/10 hover:border-[#c10e46]/50 transition-all duration-300 group">
                     <div class="w-12 h-12 bg-[#c10e46]/20 rounded-lg flex items-center justify-center mb-4 group-hover:bg-[#c10e46]/30 transition-colors">
                         <svg class="w-6 h-6 text-[#c10e46]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -107,7 +97,7 @@
                     <h3 class="text-white text-xl font-semibold mb-2">Passion</h3>
                     <p class="text-gray-400">Chaque projet est unique et mérite toute notre attention</p>
                 </div>
-            </div>
+            </div> -->
         </div>
     </section>
 </template>

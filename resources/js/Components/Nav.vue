@@ -29,10 +29,10 @@ import ApplicationLogo from './ApplicationLogo.vue';
                             A propos
                         </Link>
                         <Link
-                            href="/services"
+                            href="/agencies"
                             class="text-white hover:text-pink-600 hover:bg-pink-50 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
                         >
-                            Services
+                            Agences
                         </Link>
                     </div>
                 </div>
@@ -41,7 +41,7 @@ import ApplicationLogo from './ApplicationLogo.vue';
                 <div class="flex items-center space-x-4">
                     <Link
                         href="/login"
-                        class="bg-pink-600 hover:bg-pink-700 text-white px-5 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2"
+                        class="bg-pink-600 hover:bg-pink-700 text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2"
                     >
                         Connexion
                     </Link>
