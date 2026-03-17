@@ -142,7 +142,6 @@ const getInitials = (name) => {
                                 Antananarivo
                             </span>
                         </div>
-
                         <!-- Bouton et stats -->
                         <div class="flex items-center justify-between pt-4 border-t border-gray-100">
                             <div class="flex items-center space-x-2 text-sm text-gray-500">
