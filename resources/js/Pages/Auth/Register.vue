@@ -17,6 +17,7 @@ const form = useForm({
     date_of_birth: '',
     password: '',
     password_confirmation: '',
+    role: 'customer',
     image: null,
     is_verified: false,
 });

@@ -1,5 +1,6 @@
 <script setup>
 import Sidebar from '@/Components/Dashboard/Sidebar.vue';
+import Toast from '@/Components/Toastify/Toast.vue';
 import { usePage } from '@inertiajs/vue3';
 import { ChevronDown } from 'lucide-vue-next';
 import { computed } from 'vue';
@@ -11,6 +12,7 @@ const role = computed(() => user.value?.role);
 
 <template>
     <div class="flex h-screen bg-gray-100">
+        <Toast />
         <Sidebar />
         <!-- Main Content -->
         <div class="flex-1 flex flex-col overflow-hidden">
@@ -18,7 +20,7 @@ const role = computed(() => user.value?.role);
                 <div class="flex items-center justify-between">
                     <div class="">
                         <h2 class="text-xl font-bold text-slate-800 capitalize">Tableau de bord</h2>
-                        <p class="text-sm text-slate-600">Bienvenue dans votre espace {{ role === 'admin' ? 'Administrateur' : role === 'dev' ? 'Développeur' : 'Client' }}</p>
+                        <p class="text-sm text-slate-600">Bienvenue dans votre espace {{ role === 'admin' ? 'Administrateur' : role === 'agency' ? 'Agence' : 'Client' }}</p>
                     </div>
                     <!-- Actions utilisateur -->
                     <div class="flex items-center space-x-4">

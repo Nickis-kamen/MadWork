@@ -22,6 +22,10 @@ class RegisteredUserController extends Controller
     {
         return Inertia::render('Auth/Register');
     }
+    public function createAgency(): Response
+    {
+        return Inertia::render('Auth/RegisterAgency');
+    }
 
     /**
      * Handle an incoming registration request.
@@ -37,6 +41,7 @@ class RegisteredUserController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'image' => [ 'nullable','image', 'max:5120'],
             'phone' => 'required|string|max:20',
+            'role' => 'required|string|in:customer,agency',
             'address' => 'required|string|max:255',
             'date_of_birth' => 'required|date'
         ]);
@@ -57,7 +62,7 @@ class RegisteredUserController extends Controller
             'phone' => $request->phone,
             'address' => $request->address,
             'date_of_birth' => $request->date_of_birth,
-            'role' => 'customer',
+            'role' => $request->role,
         ]);
 
         event(new Registered($user));

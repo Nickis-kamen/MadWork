@@ -56,4 +56,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Devis::class);
     }
+
+    public function agency()
+    {
+        return $this->hasOne(Agency::class);
+    }
 }

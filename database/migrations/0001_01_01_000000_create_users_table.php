@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('image')->nullable();
             $table->boolean('is_verified')->default(false);
             $table->date('date_of_birth');
-            $table->enum('role', ['customer', 'developer', 'admin'])->default('customer');
+            $table->enum('role', ['customer', 'agency', 'admin'])->default('customer');
             $table->string('phone');
             $table->string('address');
             $table->timestamp('email_verified_at')->nullable();

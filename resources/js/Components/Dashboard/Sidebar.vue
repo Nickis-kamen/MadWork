@@ -8,7 +8,8 @@ import {
   Users,
   UserCircle,
   LogOut,
-  Menu
+  Menu,
+  Building2
 } from 'lucide-vue-next';
 import ApplicationLogoMini from '../ApplicationLogoMini.vue';
 
@@ -42,6 +43,7 @@ const user = computed(() => usePage().props.auth.user)
 
 const isAdmin = computed(() => user.value?.role === 'admin')
 const isCustomer = computed(() => user.value?.role === 'customer')
+const isAgency = computed(() => user.value?.role === 'agency')
 
 // Définition des liens du menu
 let menuItems = [];
@@ -113,6 +115,39 @@ if(isCustomer.value){
     ];
 }
 
+if(isAgency.value){
+    menuItems = [
+        {
+            id: 'dashboard',
+            name: 'Tableau de bord',
+            href: '/agency/dashboard',
+            icon: LayoutDashboard,
+            badge: 0
+        },
+        {
+            id: 'agence',
+            name: 'Mon agence',
+            href: '/agency/my-agency',
+            icon: Building2,
+            badge: 0
+        },
+        {
+            id: 'devis',
+            name: 'Mes Devis',
+            href: '/agency/devis',
+            icon: FileText,
+            badge: 3
+        },
+        {
+            id: 'projects',
+            name: 'Projets Actifs',
+            href: '/agency/projects',
+            icon: Folder,
+            badge: 0
+        },
+    ];
+}
+
 const role = computed(() => user.value?.role)
 
 const isActive = (href) => {
@@ -162,7 +197,7 @@ const toggleSidebar = () => {
 
                 <!-- Info -->
                 <div class="flex flex-col min-w-0 flex-1">
-                    <span class="font-bold text-sm truncate" style="color: #c10e46">Espace {{ role === 'admin' ? 'Administrateur' : role === 'dev' ? 'Développeur' : 'Client' }}</span>
+                    <span class="font-bold text-sm truncate" style="color: #c10e46">Espace {{ role === 'admin' ? 'Administrateur' : role === 'agency' ? 'Agence' : 'Client' }}</span>
                     <span class="text-xs font-medium truncate" style="color: rgba(255,255,255,0.7)">{{ user?.name || "Not found" }}</span>
                 </div>
                 </div>
