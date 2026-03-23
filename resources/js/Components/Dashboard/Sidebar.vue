@@ -9,7 +9,8 @@ import {
   UserCircle,
   LogOut,
   Menu,
-  Building2
+  Building2,
+  ChartColumnStacked
 } from 'lucide-vue-next';
 import ApplicationLogoMini from '../ApplicationLogoMini.vue';
 
@@ -55,6 +56,13 @@ if(isAdmin.value){
             name: 'Tableau de bord',
             href: '/admin/dashboard',
             icon: LayoutDashboard,
+            badge: 0
+        },
+        {
+            id: 'categories',
+            name: 'Catégories',
+            href: '/admin/categories',
+            icon: ChartColumnStacked,
             badge: 0
         },
         {
