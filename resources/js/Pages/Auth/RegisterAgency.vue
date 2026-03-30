@@ -40,10 +40,6 @@ const handleImageUpload = (e) => {
         imagePreview.value = URL.createObjectURL(file);
     }
 };
-
-const minDate = new Date();
-minDate.setFullYear(minDate.getFullYear() - 18);
-const minDateString = minDate.toISOString().split('T')[0];
 </script>
 
 <template>
@@ -153,7 +149,6 @@ const minDateString = minDate.toISOString().split('T')[0];
                         class="mt-1 block w-full text-sm py-1.5"
                         v-model="form.date_of_birth"
                         required
-                        :max="minDateString"
                     />
                     <InputError class="mt-1 text-xs" :message="form.errors.date_of_birth" />
                 </div>

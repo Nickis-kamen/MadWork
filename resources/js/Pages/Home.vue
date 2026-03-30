@@ -8,6 +8,10 @@ import Post from '@/Components/Post.vue';
 import AgencyRegisterLink from '@/Components/AgencyRegisterLink.vue';
 import { computed } from 'vue';
 
+const props = defineProps({
+    agencies: Array,
+})
+
 const user = computed(() => usePage().props.auth.user)
 
 const isCustomer = computed(() => user.value?.role === 'customer')
@@ -19,11 +23,11 @@ const isCustomer = computed(() => user.value?.role === 'customer')
     <Header />
     <div v-if="isCustomer">
         <Post />
-    </div> 
+    </div>
     <div v-if="!user">
         <AgencyRegisterLink />
     </div>
     <About />
-    <Agency />
+    <Agency :agencies="agencies" />
 </template>
 

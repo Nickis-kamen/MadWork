@@ -1,6 +1,9 @@
 <script setup>
-import { Link } from '@inertiajs/vue3';
+import { Link, usePage } from '@inertiajs/vue3';
 import ApplicationLogo from './ApplicationLogo.vue';
+import { computed } from 'vue';
+
+const user = computed(() => usePage().props.auth.user)
 
 </script>
 
@@ -39,13 +42,19 @@ import ApplicationLogo from './ApplicationLogo.vue';
 
                 <!-- Bouton Connexion -->
                 <div class="flex items-center space-x-4">
-                    <Link
+                    <Link v-if="!user"
                         href="/login"
                         class="bg-pink-600 hover:bg-pink-700 text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2"
                     >
                         Connexion
                     </Link>
-
+                    <Link v-else
+                        href="/logout"
+                        method="post"
+                        class="bg-pink-600 hover:bg-pink-700 text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2"
+                    >
+                        Déconnexion
+                    </Link>
                     <!-- Menu mobile -->
                     <button class="md:hidden inline-flex items-center justify-center p-2 rounded-md text-white hover:text-pink-600 hover:bg-pink-50 focus:outline-none focus:ring-2 focus:ring-pink-500">
                         <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">

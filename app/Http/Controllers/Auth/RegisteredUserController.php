@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
@@ -20,7 +21,10 @@ class RegisteredUserController extends Controller
      */
     public function create(): Response
     {
-        return Inertia::render('Auth/Register');
+        $categories = Category::all();
+        return Inertia::render('Auth/Register', [
+            'categories' => $categories
+        ]);
     }
     public function createAgency(): Response
     {
@@ -43,7 +47,8 @@ class RegisteredUserController extends Controller
             'phone' => 'required|string|max:20',
             'role' => 'required|string|in:customer,agency',
             'address' => 'required|string|max:255',
-            'date_of_birth' => 'required|date'
+            'date_of_birth' => 'required|date',
+            'category_id' => 'nullable|exists:categories,id',
         ]);
 
         if ($request->hasFile('image')) {
@@ -63,6 +68,7 @@ class RegisteredUserController extends Controller
             'address' => $request->address,
             'date_of_birth' => $request->date_of_birth,
             'role' => $request->role,
+            'category_id' => $request->category_id,
         ]);
 
         event(new Registered($user));

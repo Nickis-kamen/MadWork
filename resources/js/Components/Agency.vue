@@ -2,56 +2,9 @@
 import { Link } from '@inertiajs/vue3';
 import { ref } from 'vue'
 
-const agencies = ref([
-  {
-    id: 1,
-    nom: "Digital Boost Agency",
-    description: "Agence spécialisée dans la création de sites vitrines et e-commerce avec une approche design-first.",
-    specialite: "E-commerce & Design",
-    logo: "/images/agences/digital-boost.jpg",
-    a_propos: "Fondée en 2018, Digital Boost accompagne les PME dans leur transformation digitale avec des solutions sur-mesure."
-  },
-  {
-    id: 2,
-    nom: "WebSolutions Pro",
-    description: "Experts en applications web complexes et solutions d'entreprise innovantes.",
-    specialite: "Applications Web",
-    logo: "/images/agences/websolutions.jpg",
-    a_propos: "Une équipe de développeurs passionnés spécialisés dans les architectures modernes et scalables."
-  },
-  {
-    id: 3,
-    nom: "CréaTech Studio",
-    description: "L'alliance parfaite entre créativité et technologie pour des sites uniques et mémorables.",
-    specialite: "Création & Design",
-    logo: "/images/agences/createch.jpg",
-    a_propos: "Des designers et développeurs unis pour créer des expériences digitales exceptionnelles."
-  },
-  {
-    id: 4,
-    nom: "E-Comm Experts",
-    description: "Spécialistes de la vente en ligne et de l'optimisation du taux de conversion.",
-    specialite: "E-commerce",
-    logo: "/images/agences/ecomm.jpg",
-    a_propos: "Plus de 100 boutiques en ligne créées avec un focus sur la performance et l'UX."
-  },
-  {
-    id: 5,
-    nom: "Mobile First Agency",
-    description: "Expert en applications mobiles et sites responsifs pour une expérience utilisateur optimale.",
-    specialite: "Mobile & Responsive",
-    logo: "/images/agences/mobile-first.jpg",
-    a_propos: "La philosophie mobile-first appliquée à tous vos projets digitaux."
-  },
-  {
-    id: 6,
-    nom: "SEO Performers",
-    description: "Agence spécialisée en référencement naturel et stratégies de contenu.",
-    specialite: "SEO & Marketing",
-    logo: "/images/agences/seo-performers.jpg",
-    a_propos: "Des experts SEO qui boostent votre visibilité et votre trafic organique."
-  }
-])
+const props = defineProps({
+    agencies: Array,
+})
 
 // Fonction pour obtenir les initiales (fallback si image non disponible)
 const getInitials = (name) => {
@@ -88,78 +41,84 @@ const getInitials = (name) => {
             <div class="grid lg:grid-cols-3 md:grid-cols-2 gap-8">
                 <div v-for="agency in agencies" :key="agency.id"
                     class="group relative bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
+                    <Link :href="`/agence/${agency.slug}`">
+                        <!-- Badge spécialité -->
+                        <div class="absolute top-4 right-4 z-20">
+                            <span class="bg-gradient-to-r from-[#c10e46] to-[#ff4d7e] text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg">
+                                {{ agency.specialite || 'Spécialité' }}
+                            </span>
+                        </div>
 
-                    <!-- Badge spécialité -->
-                    <div class="absolute top-4 right-4 z-20">
-                        <span class="bg-gradient-to-r from-[#c10e46] to-[#ff4d7e] text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg">
-                            {{ agency.specialite }}
-                        </span>
-                    </div>
+                        <!-- En-tête avec image de fond (agency.image) -->
+                        <div class="relative h-48 bg-cover bg-center overflow-hidden"
+                            :style="{ backgroundImage: `url('/storage/${agency.image || '/images/default-agency-bg.jpg'}')` }">
 
-                    <!-- En-tête avec logo -->
-                    <div class="relative h-48 bg-gradient-to-br from-[#1e002f] to-[#2a0040] overflow-hidden">
+                            <!-- Overlay pour améliorer la lisibilité du texte si nécessaire -->
+                            <div class="absolute inset-0 bg-black/30"></div>
 
-                        <!-- Logo ou initiales -->
-                        <div class="absolute -bottom-12 left-6">
-                            <div class="w-24 h-24 rounded-2xl bg-white shadow-xl border-4 border-white overflow-hidden transform group-hover:scale-105 transition-transform duration-500">
-                                <img v-if="agency.logo" :src="agency.logo" :alt="agency.nom"
-                                     class="w-full h-full object-cover"
-                                     @error="agency.logoError = true">
-                                <div v-else-if="agency.logoError"
-                                     class="w-full h-full bg-gradient-to-br from-[#c10e46] to-[#ff4d7e] flex items-center justify-center text-white font-bold text-2xl">
-                                    {{ getInitials(agency.nom) }}
+                            <!-- Informations dans l'en-tête -->
+                            <div class="absolute bottom-4 left-6 right-6 z-10">
+                                <h3 class="text-xl font-bold text-white mb-1 drop-shadow-lg group-hover:text-pink-200 transition-colors">
+                                    {{ agency.name || 'Nom non spécifié' }}
+                                </h3>
+                                <p class="text-sm text-white/90 drop-shadow-md flex items-center gap-1">
+                                    <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
+                                        <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
+                                    </svg>
+                                    {{ agency.email || 'Email non spécifié' }}
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Contenu -->
+                        <div class="p-6">
+                            <!-- Étoiles et avis -->
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="flex items-center gap-1">
+                                    <svg v-for="i in 5" :key="i" class="w-4 h-4" :class="i <= (agency.note || 4) ? 'text-yellow-400' : 'text-gray-300'" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                    </svg>
+                                    <span class="text-sm text-gray-600 ml-1">{{ agency.note || '4.9' }} ({{ agency.nb_avis || '128' }} avis)</span>
                                 </div>
-                                <div v-else
-                                     class="w-full h-full bg-gradient-to-br from-[#c10e46] to-[#ff4d7e] flex items-center justify-center text-white font-bold text-2xl">
-                                    {{ getInitials(agency.nom) }}
+                                <div class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">
+                                    {{ agency.specialite || 'Agence' }}
+                                </div>
+                            </div>
+
+                            <!-- Description -->
+                            <p class="text-gray-600 text-sm mb-4 line-clamp-3 leading-relaxed">
+                                {{ agency.description || 'Aucune description disponible pour le moment.' }}
+                            </p>
+
+                            <!-- Informations complémentaires -->
+                            <div class="space-y-2 mb-4">
+                                <div v-if="agency.address" class="flex items-start gap-2 text-sm text-gray-500">
+                                    <svg class="w-4 h-4 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    </svg>
+                                    <span>{{ agency.address }}</span>
+                                </div>
+                                <div v-if="agency.phone" class="flex items-center gap-2 text-sm text-gray-500">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                                    </svg>
+                                    <span>{{ agency.phone }}</span>
+                                </div>
+                            </div>
+
+                            <!-- Bouton -->
+                            <div class="flex items-center justify-between pt-4 border-t border-gray-100">
+                                <div class="flex items-center gap-2 text-sm text-gray-500">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                    </svg>
+                                    <span>Membre depuis {{ agency.created_at ? new Date(agency.created_at).getFullYear() : '2024' }}</span>
                                 </div>
                             </div>
                         </div>
-                    </div>
-
-                    <!-- Contenu -->
-                    <div class="pt-16 p-6">
-                        <h3 class="text-xl font-bold text-[#1e002f] mb-2 group-hover:text-[#c10e46] transition-colors">
-                            {{ agency.nom }}
-                        </h3>
-
-                        <!-- "À propos" -->
-                        <p class="text-sm text-gray-500 mb-3 italic border-l-3 border-[#c10e46] pl-3">
-                            {{ agency.a_propos }}
-                        </p>
-
-                        <!-- Description -->
-                        <p class="text-gray-600 text-sm mb-4 line-clamp-2">
-                            {{ agency.description }}
-                        </p>
-
-                        <!-- Tags spécialités additionnelles -->
-                        <div class="flex flex-wrap gap-2 mb-6">
-                            <span class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">
-                                {{ agency.specialite }}
-                            </span>
-                            <span class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">
-                                Antananarivo
-                            </span>
-                        </div>
-                        <!-- Bouton et stats -->
-                        <div class="flex items-center justify-between pt-4 border-t border-gray-100">
-                            <div class="flex items-center space-x-2 text-sm text-gray-500">
-                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                </svg>
-                                <span>4.9 (128 avis)</span>
-                            </div>
-
-                            <Link :href="`/agences/${agency.id}`"
-                                  class="inline-flex items-center text-[#c10e46] hover:text-[#ff4d7e] font-semibold text-sm group/link">
-                                Voir profil
-                                <svg class="w-4 h-4 ml-1 group-hover/link:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                                </svg>
-                            </Link>
-                        </div>
-                    </div>
+                    </Link>
                 </div>
             </div>
 

@@ -19,4 +19,9 @@ class Category extends Model
         'title',
         'slug',
     ];
+
+    public function users()
+    {
+        return $this->hasMany(User::class);
+    }
 }

@@ -27,6 +27,7 @@ class User extends Authenticatable
         'address',
         'date_of_birth',
         'role',
+        'category_id',
     ];
 
     /**
@@ -60,5 +61,10 @@ class User extends Authenticatable
     public function agency()
     {
         return $this->hasOne(Agency::class);
+    }
+
+    public function categories()
+    {
+        return $this->belongsTo(Category::class);
     }
 }

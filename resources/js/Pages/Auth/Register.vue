@@ -8,6 +8,10 @@ import { Head, Link, useForm } from '@inertiajs/vue3';
 import { ref } from 'vue';
 import { Plus } from 'lucide-vue-next';
 
+const props = defineProps({
+    categories: Array,
+})
+
 const form = useForm({
     name: '',
     first_name: '',
@@ -20,6 +24,7 @@ const form = useForm({
     role: 'customer',
     image: null,
     is_verified: false,
+    category_id: null,
 });
 
 const imagePreview = ref(null);
@@ -40,10 +45,6 @@ const handleImageUpload = (e) => {
         imagePreview.value = URL.createObjectURL(file);
     }
 };
-
-const minDate = new Date();
-minDate.setFullYear(minDate.getFullYear() - 18);
-const minDateString = minDate.toISOString().split('T')[0];
 </script>
 
 <template>
@@ -153,12 +154,11 @@ const minDateString = minDate.toISOString().split('T')[0];
                         class="mt-1 block w-full text-sm py-1.5"
                         v-model="form.date_of_birth"
                         required
-                        :max="minDateString"
                     />
                     <InputError class="mt-1 text-xs" :message="form.errors.date_of_birth" />
                 </div>
 
-                <!-- Adresse (pleine largeur) -->
+                <!-- Adresse -->
                 <div>
                     <InputLabel for="address" value="Adresse" class="text-xs" />
                     <TextInput
@@ -170,6 +170,21 @@ const minDateString = minDate.toISOString().split('T')[0];
                         placeholder="123 Rue Example, 75001 Paris"
                     />
                     <InputError class="mt-1 text-xs" :message="form.errors.address" />
+                </div>
+
+                <div class="col-span-2">
+                    <InputLabel for="category" value="Centre d'intérêt" class="text-xs" />
+                    <select
+                        id="categories"
+                        class="mt-1 block w-full text-sm py-1.5 border-gray-300 rounded-md shadow-sm focus:ring focus:ring-pink-200 focus:border-pink-500"
+                        v-model="form.category_id"
+                    >
+                        <option value="" disabled>Choisissez un centre d'intérêt</option>
+                        <option v-for="category in categories" :value="category.id"  :key="category.id">
+                            {{ category.title }}
+                        </option>
+                    </select>
+                    <InputError class="mt-1 text-xs" :message="form.errors.categories" />
                 </div>
 
                 <!-- Mot de passe -->
