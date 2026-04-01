@@ -51,9 +51,18 @@ class CategoryController extends Controller
             'title' => 'required|string|max:255|unique:categories,title,' . $category->id
         ]);
 
+        $slug = Str::slug($request->title);
+
+        if(Category::where('slug', $slug)->exists()) {
+            return redirect('/admin/categories')->with([
+                'message' => 'Une catégorie avec ce titre existe déjà !',
+                'type' => 'error' // ou 'error', 'warning', 'info'
+            ]);
+        }
+        
         $category->update([
             'title' => $request->title,
-            'slug' => Str::slug($request->title)
+            'slug' => $slug
         ]);
 
         return redirect()->back()->with([

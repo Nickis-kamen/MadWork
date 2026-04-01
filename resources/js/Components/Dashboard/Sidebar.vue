@@ -134,9 +134,16 @@ if(isAgency.value){
         },
         {
             id: 'agence',
-            name: 'Mon agence',
+            name: 'Mon Agence',
             href: '/agency/my-agency',
             icon: Building2,
+            badge: 0
+        },
+        {
+            id: 'services',
+            name: 'Mes Services',
+            href: '/agency/my-services',
+            icon: ChartColumnStacked,
             badge: 0
         },
         {

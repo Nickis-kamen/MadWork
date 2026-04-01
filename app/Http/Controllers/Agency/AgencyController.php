@@ -89,7 +89,6 @@ class AgencyController extends Controller
 
     public function destroy(Agency $agency)
     {
-        $agency = Auth::user()->agency;
         $agency->delete();
 
         return redirect('/agency/my-agency')->with([
