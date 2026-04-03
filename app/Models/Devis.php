@@ -12,18 +12,24 @@ class Devis extends Model
     protected $fillable = [
         'user_id',
         'title',
-        'service_type',
+        'service_id',
         'delai',
-        'delai_admin',
+        'delai_agency',
         'description',
-        'description_admin',
+        'description_agency',
         'cdc_file',
         'price',
+        'budget',
         'status',
     ];
 
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function service()
+    {
+        return $this->belongsTo(Service::class);
     }
 }

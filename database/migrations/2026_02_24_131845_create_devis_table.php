@@ -15,12 +15,13 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('title');
-            $table->string('service_type');
+            $table->foreignId('service_id')->nullable()->constrained()->onDelete('set null');
             $table->integer('delai');
-            $table->integer('delai_admin')->nullable();
+            $table->integer('delai_agency')->nullable();
             $table->text('description');
-            $table->text('description_admin')->nullable();
+            $table->text('description_agency')->nullable();
             $table->string('cdc_file')->nullable();
+            $table->float('budget');
             $table->float('price')->nullable();
             $table->enum('status', ['pending', 'proposed', 'accepted', 'refused'])->default('pending');
             $table->timestamps();

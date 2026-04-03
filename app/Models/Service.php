@@ -34,4 +34,9 @@ class Service extends Model
     {
         return $this->belongsTo(Agency::class);
     }
+
+    public function devis()
+    {
+        return $this->hasMany(Devis::class);
+    }
 }

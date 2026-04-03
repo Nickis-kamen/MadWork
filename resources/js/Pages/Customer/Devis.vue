@@ -14,15 +14,7 @@ import {
   FileCheck,
   X,
   Calendar,
-  User,
-  Mail,
-  Phone,
-  MapPin,
-  FileInput,
-  DollarSign,
-  MessageSquare
 } from 'lucide-vue-next';
-import Toast from '@/Components/Toastify/Toast.vue';
 
 // Props reçues de Laravel
 const props = defineProps({
@@ -75,7 +67,6 @@ const isPending = (status) => status === 'pending';
 
 <template>
     <Head title="Mes Devis" />
-    <Toast />
     <AuthenticatedLayout>
         <!-- Container -->
         <div class="p-4 sm:p-6 space-y-6 bg-white min-h-screen">

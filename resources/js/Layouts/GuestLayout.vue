@@ -8,7 +8,7 @@ import Toast from '@/Components/Toastify/Toast.vue';
     >
     <Toast />
         <div
-        class="md:mt-6 w-full overflow-hidden bg-white px-8 py-6 shadow-md md:max-w-lg sm:max-w-md sm:rounded-lg"
+        class="md:mt-6 w-full overflow-hidden bg-white px-8 py-6 shadow-md md:max-w-xl sm:max-w-md sm:rounded-lg"
         >
             <slot />
         </div>

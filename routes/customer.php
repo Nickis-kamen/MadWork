@@ -6,9 +6,9 @@ use Illuminate\Support\Facades\Route;
 
 
 
-Route::group(['middleware' => 'customer', 'prefix' => 'customer', 'as' => 'customer.'],function()
+Route::group(['middleware' => 'customer'],function()
 {
-    Route::get('dashboard', [DashboardController::class, 'index']) -> name('dashboard');
     Route::post('devis', [DevisController::class, 'store']) -> name('devis.store');
-    Route::get('devis', [DevisController::class, 'index']) -> name('devis');
+    Route::get('my-devis', [DevisController::class, 'index']) -> name('my-devis');
+    Route::get('devis', [DevisController::class, 'create']) -> name('devis');
 });
