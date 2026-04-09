@@ -13,6 +13,7 @@ class Devis extends Model
         'user_id',
         'title',
         'service_id',
+        'agency_id',
         'delai',
         'delai_agency',
         'description',
@@ -31,5 +32,10 @@ class Devis extends Model
     public function service()
     {
         return $this->belongsTo(Service::class);
+    }
+
+    public function agency()
+    {
+        return $this->belongsTo(Agency::class);
     }
 }

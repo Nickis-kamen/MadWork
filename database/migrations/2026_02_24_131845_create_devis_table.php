@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('title');
             $table->foreignId('service_id')->nullable()->constrained()->onDelete('set null');
+            $table->foreignId('agency_id')->nullable()->constrained('agencies')->onDelete('set null');
             $table->integer('delai');
             $table->integer('delai_agency')->nullable();
             $table->text('description');

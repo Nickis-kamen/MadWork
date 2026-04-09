@@ -24,7 +24,7 @@ class DevisController extends Controller
 
     public function index()
     {
-        $devis = Devis::where('user_id', Auth::id())->get();
+        $devis = Devis::with('service')->where('user_id', Auth::id())->get();
 
         return Inertia::render('Customer/Devis', [
             'devis' => $devis
@@ -42,6 +42,8 @@ class DevisController extends Controller
             'cdc_file' => 'nullable|file|mimes:pdf|max:5120', // max 5MB
         ]);
 
+        $service = Service::FindOrFail($request->service_id);
+
         $path = null;
         if ($request->hasFile('cdc_file')) {
             $file = $request->file('cdc_file');
@@ -51,6 +53,7 @@ class DevisController extends Controller
         Devis::create([
             'user_id' => Auth::id(),
             'service_id' => $request->service_id,
+            'agency_id' => $service->agency_id,
             'title' => $request->title,
             'delai' => $request->delai,
             'budget' => $request->budget,

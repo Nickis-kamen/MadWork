@@ -149,7 +149,7 @@ if(isAgency.value){
         {
             id: 'devis',
             name: 'Mes Devis',
-            href: '/agency/devis',
+            href: '/agency/my-devis',
             icon: FileText,
             badge: 3
         },

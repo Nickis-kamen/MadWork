@@ -40,8 +40,8 @@ class AuthenticatedSessionController extends Controller
         if (Auth::user()->role === 'agency') {
             return redirect(route('agency.dashboard', absolute: false));
         }
-        
-        return redirect()->intended(route('customer.dashboard', absolute: false));
+
+        return redirect()->intended(route('home', absolute: false));
     }
 
     /**

@@ -16,11 +16,16 @@ class CustomerMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if(Auth::check() && Auth::user()->role === 'customer')
+        if(Auth::check())
         {
-            return $next($request);
+            if(Auth::user()->role === 'customer')
+            {
+                return $next($request);
+            }else{
+                return redirect('/');
+            }
         }else{
-            return redirect('/');
+            return redirect('/login');
         }
     }
 }

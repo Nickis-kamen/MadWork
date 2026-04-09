@@ -16,11 +16,16 @@ class AgencyMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if(Auth::check() && Auth::user()->role === 'agency')
+        if(Auth::check())
         {
-            return $next($request);
+            if(Auth::user()->role === 'agency')
+            {
+                return $next($request);
+            }else{
+                return redirect('/');
+            }
         }else{
-            return redirect('/');
+            return redirect('/login');
         }
     }
 }

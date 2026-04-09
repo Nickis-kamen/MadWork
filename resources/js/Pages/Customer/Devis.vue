@@ -207,6 +207,7 @@ const isPending = (status) => status === 'pending';
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Titre / Service</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date demande</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Délai souhaité</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Budget souhaité</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Montant</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
                                 <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
@@ -219,20 +220,8 @@ const isPending = (status) => status === 'pending';
                                     #{{ devi.id }}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex items-center">
-                                        <div class="flex-shrink-0 h-8 w-8">
-                                            <div
-                                                class="h-8 w-8 rounded-lg flex items-center justify-center"
-                                                :style="{ background: 'linear-gradient(135deg, #c10e4610 0%, #1e002f10 100%)' }"
-                                            >
-                                                <FileText class="w-4 h-4" :style="{ color: '#c10e46' }" />
-                                            </div>
-                                        </div>
-                                        <div class="ml-3">
-                                            <p class="text-sm font-medium" :style="{ color: '#1e002f' }">{{ devi.title }}</p>
-                                            <p class="text-xs text-gray-500">{{ devi.service_type }}</p>
-                                        </div>
-                                    </div>
+                                    <p class="text-sm font-medium" :style="{ color: '#1e002f' }">{{ devi.title }}</p>
+                                    <p class="text-xs text-gray-500">{{ devi.service.title }}</p>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                                     {{ formatDate(devi.created_at) }}
@@ -240,9 +229,12 @@ const isPending = (status) => status === 'pending';
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                                     {{ devi.delai }} jours
                                 </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                                    {{ devi.budget }} Ar
+                                </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm">
                                     <span v-if="devi.price && !isPending(devi.status)" :style="{ color: '#c10e46' }" class="font-semibold">
-                                        {{ devi.price }} €
+                                        {{ devi.price }} Ar
                                     </span>
                                     <span v-else class="text-gray-400">-</span>
                                 </td>
@@ -275,14 +267,6 @@ const isPending = (status) => status === 'pending';
                                         >
                                             <Download class="w-4 h-4" :style="{ color: '#c10e46' }" />
                                         </a>
-                                        <Link
-                                            v-if="devi.status === 'proposed'"
-                                            :href="`/devis/${devi.id}/reponse`"
-                                            class="px-3 py-2 text-xs rounded-lg border hover:bg-gray-50 transition-colors inline-flex items-center"
-                                            :style="{ borderColor: '#c10e4620', color: '#c10e46' }"
-                                        >
-                                            Répondre
-                                        </Link>
                                     </div>
                                 </td>
                             </tr>
@@ -293,14 +277,14 @@ const isPending = (status) => status === 'pending';
                                     <p class="text-gray-500 text-lg mb-2">Aucun devis pour le moment</p>
                                     <p class="text-gray-400 text-sm mb-6">Vous n'avez pas encore fait de demande de devis</p>
                                     <Link
-                                        href="/devis/creer"
+                                        href="/devis"
                                         class="inline-flex items-center space-x-2 px-6 py-3 text-white rounded-xl hover:shadow-lg transition-all duration-200 hover:scale-105 font-semibold shadow-md"
                                         :style="{
                                             background: 'linear-gradient(135deg, #c10e46 0%, #1e002f 100%)'
                                         }"
                                     >
                                         <Plus class="w-4 h-4" />
-                                        <span>Créer votre premier devis</span>
+                                        <span>Demander un devis</span>
                                     </Link>
                                 </td>
                             </tr>
@@ -388,22 +372,22 @@ const isPending = (status) => status === 'pending';
                                 </div>
                             </div>
 
-                            <!-- Colonne droite : Réponse admin -->
+                            <!-- Colonne droite : Réponse agence -->
                             <div class="space-y-4">
                                 <h4 class="font-semibold text-sm uppercase tracking-wider text-gray-500">Réponse de l'équipe</h4>
 
-                                <!-- Délai admin -->
+                                <!-- Délai agence -->
                                 <div>
                                     <p class="text-xs text-gray-500 mb-1">Délai proposé</p>
                                     <div
                                         class="p-3 rounded-lg"
                                         :class="{
                                             'bg-gray-100 text-gray-400': isPending(selectedDevi.status),
-                                            'bg-blue-50': !isPending(selectedDevi.status) && selectedDevi.delai_admin
+                                            'bg-blue-50': !isPending(selectedDevi.status) && selectedDevi.delai_agency
                                         }"
                                     >
-                                        <p v-if="selectedDevi.delai_admin && !isPending(selectedDevi.status)" class="text-sm" :style="{ color: '#1e002f' }">
-                                            {{ selectedDevi.delai_admin }} jours
+                                        <p v-if="selectedDevi.delai_agency && !isPending(selectedDevi.status)" class="text-sm" :style="{ color: '#1e002f' }">
+                                            {{ selectedDevi.delai_agency }} jours
                                         </p>
                                         <p v-else class="text-sm text-gray-400 italic">
                                             En attente de réponse
@@ -418,11 +402,11 @@ const isPending = (status) => status === 'pending';
                                         class="p-3 rounded-lg"
                                         :class="{
                                             'bg-gray-100 text-gray-400': isPending(selectedDevi.status),
-                                            'bg-green-50': !isPending(selectedDevi.status) && selectedDevi.price
+                                            'bg-green-50': !isPending(selectedDevi.status) && selectedDevi.price_agency
                                         }"
                                     >
                                         <p v-if="selectedDevi.price && !isPending(selectedDevi.status)" class="text-sm font-semibold" :style="{ color: '#c10e46' }">
-                                            {{ selectedDevi.price }} €
+                                            {{ selectedDevi.price }} Ar
                                         </p>
                                         <p v-else class="text-sm text-gray-400 italic">
                                             Non défini
@@ -430,18 +414,18 @@ const isPending = (status) => status === 'pending';
                                     </div>
                                 </div>
 
-                                <!-- Description admin -->
+                                <!-- Description agence -->
                                 <div>
-                                    <p class="text-xs text-gray-500 mb-1">Commentaire de l'équipe</p>
+                                    <p class="text-xs text-gray-500 mb-1">Commentaire de l'agence</p>
                                     <div
                                         class="p-3 rounded-lg min-h-[80px]"
                                         :class="{
                                             'bg-gray-100 text-gray-400': isPending(selectedDevi.status),
-                                            'bg-gray-50': !isPending(selectedDevi.status) && selectedDevi.description_admin
+                                            'bg-gray-50': !isPending(selectedDevi.status) && selectedDevi.description_agency
                                         }"
                                     >
-                                        <p v-if="selectedDevi.description_admin && !isPending(selectedDevi.status)" class="text-sm" :style="{ color: '#1e002f' }">
-                                            {{ selectedDevi.description_admin }}
+                                        <p v-if="selectedDevi.description_agency && !isPending(selectedDevi.status)" class="text-sm" :style="{ color: '#1e002f' }">
+                                            {{ selectedDevi.description_agency }}
                                         </p>
                                         <p v-else class="text-sm text-gray-400 italic">
                                             Aucun commentaire pour le moment

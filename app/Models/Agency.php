@@ -34,4 +34,9 @@ class Agency extends Model
     {
         return $this->hasMany(Service::class);
     }
+
+    public function devis()
+    {
+        return $this->hasMany(Devis::class);
+    }
 }

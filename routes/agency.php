@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Agency\AgencyController;
 use App\Http\Controllers\Agency\DashboardController;
+use App\Http\Controllers\Agency\DevisController;
 use App\Http\Controllers\Agency\ServiceController;
 use Illuminate\Support\Facades\Route;
 
@@ -21,4 +22,7 @@ Route::group(['middleware' => 'agency', 'prefix' => 'agency', 'as' => 'agency.']
     Route::post('my-services', [ServiceController::class, 'store']) -> name('services.store');
     Route::put('my-services/{service}', [ServiceController::class, 'update']) -> name('services.update');
     Route::delete('my-services/{service}', [ServiceController::class, 'destroy']) -> name('services.destroy');
+
+    Route::get('my-devis', [DevisController::class, 'index']) -> name('devis.index');
+    Route::put('my-devis/{devis}/propose', [DevisController::class, 'propose']) -> name('devis.propose');
 });
