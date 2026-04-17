@@ -312,7 +312,7 @@ const isPending = (status) => status === 'pending';
                             </div>
                             <div>
                                 <h3 class="text-xl font-bold" :style="{ color: '#1e002f' }">{{ selectedDevi.title }}</h3>
-                                <p class="text-sm text-gray-500">Devis #{{ selectedDevi.id }} • {{ selectedDevi.service_type }}</p>
+                                <p class="text-sm text-gray-500">Devis #{{ selectedDevi.id }} • {{ selectedDevi.service.title }}</p>
                             </div>
                         </div>
                         <button

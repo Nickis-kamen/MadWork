@@ -72,6 +72,7 @@ const submitProposal = () => {
             if (index !== -1) {
                 props.devis[index] = { ...selectedDevi.value };
             }
+            window.location.reload();
             closeModal();
         },
         onError: (errors) => {
@@ -330,7 +331,7 @@ const hasProposal = (devi) => devi.price_agency || devi.delai_agency || devi.des
                             <div v-if="isPending(selectedDevi.status)" class="space-y-4">
                                 <div class="grid grid-cols-2 gap-4">
                                     <div>
-                                        <label class="block text-xs text-gray-500 mb-1">Montant (€) *</label>
+                                        <label class="block text-xs text-gray-500 mb-1">Montant (Ar) *</label>
                                         <input type="number" v-model="formData.price_agency" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#c10e46]" :style="{ borderColor: '#c10e4620' }" placeholder="Ex: 1500">
                                     </div>
                                     <div>

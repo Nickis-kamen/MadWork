@@ -39,4 +39,9 @@ class Service extends Model
     {
         return $this->hasMany(Devis::class);
     }
+
+    public function serviceDetails()
+    {
+        return $this->hasMany(Service_detail::class);
+    }
 }

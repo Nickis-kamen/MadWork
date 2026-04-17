@@ -39,12 +39,11 @@ const truncateDescription = (description, maxLength = 100) => {
                     Des prestations de qualité adaptées à vos besoins, réalisées par des experts passionnés
                 </p>
             </div>
-
             <!-- Grille des services -->
             <div class="grid lg:grid-cols-3 md:grid-cols-2 gap-8">
                 <div v-for="service in services" :key="service.id"
                     class="group relative bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
-                    <Link :href="`/devis?service_id=${service.id}`">
+                    <Link :href="`/services/${service.slug}`">
                         <!-- Badge prix -->
                         <div class="absolute top-4 right-4 z-20">
                             <span class="bg-gradient-to-r from-[#c10e46] to-[#ff4d7e] text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg">

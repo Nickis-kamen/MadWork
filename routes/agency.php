@@ -22,6 +22,8 @@ Route::group(['middleware' => 'agency', 'prefix' => 'agency', 'as' => 'agency.']
     Route::post('my-services', [ServiceController::class, 'store']) -> name('services.store');
     Route::put('my-services/{service}', [ServiceController::class, 'update']) -> name('services.update');
     Route::delete('my-services/{service}', [ServiceController::class, 'destroy']) -> name('services.destroy');
+    Route::post('my-services/{service}/details', [ServiceController::class, 'addDetail']) -> name('services.addDetail');
+    Route::delete('my-services/details/{id}', [ServiceController::class, 'removeDetail']) -> name('services.removeDetail');
 
     Route::get('my-devis', [DevisController::class, 'index']) -> name('devis.index');
     Route::put('my-devis/{devis}/propose', [DevisController::class, 'propose']) -> name('devis.propose');

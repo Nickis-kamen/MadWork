@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Agency;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Service;
+use App\Models\Service_detail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -24,8 +25,8 @@ class ServiceController extends Controller
                 'categories' => Category::all()
             ]);
         }
-        
-        $services = Auth::user()->agency->services()->with('category')->latest()->get();
+
+        $services = Auth::user()->agency->services()->with('category')->with('serviceDetails')->latest()->get();
         $categories = Category::all();
 
         return Inertia::render('Agency/Services',[
@@ -64,7 +65,7 @@ class ServiceController extends Controller
         ]);
 
         return redirect('/agency/my-services')->with([
-            'message' => 'Service créé avec succès !',
+            'message' => 'Service créé avec succès',
             'type' => 'success'
         ]);
     }
@@ -95,7 +96,7 @@ class ServiceController extends Controller
         ]);
 
         return redirect('/agency/my-services')->with([
-            'message' => 'Service mis à jour avec succès !',
+            'message' => 'Service mis à jour avec succès',
             'type' => 'success'
         ]);
     }
@@ -105,7 +106,7 @@ class ServiceController extends Controller
         $service->delete();
 
         return redirect('/agency/my-services')->with([
-            'message' => 'Service supprimé avec succès !',
+            'message' => 'Service supprimé avec succès',
             'type' => 'success'
         ]);
     }
@@ -121,5 +122,41 @@ class ServiceController extends Controller
         }
 
         return $slug;
+    }
+
+    public function addDetail(Request $request, Service $service)
+    {
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
+        ]);
+
+        if($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('uploads/service_details', 'public');
+        }
+
+        Service_detail::create([
+            'service_id' => $service->id,
+            'title' => $request->title,
+            'description' => $request->description,
+            'image' => $imagePath ?? null
+        ]);
+
+        return redirect('/agency/my-services')->with([
+            'message' => 'Projets ajouté avec succès',
+            'type' => 'success'
+        ]);
+    }
+
+    public function removeDetail($id)
+    {
+        $detail = Service_detail::findOrFail($id);
+        $detail->delete();
+
+        return redirect('/agency/my-services')->with([
+            'message' => 'Projet supprimé avec succès',
+            'type' => 'success'
+        ]);
     }
 }
