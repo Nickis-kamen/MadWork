@@ -8,6 +8,7 @@ use Inertia\Inertia;
 
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/services', [ServiceController::class, 'index'])->name('services.index');
 Route::get('/services/{service}', [ServiceController::class, 'show'])->name('services.show');
 
 Route::middleware('auth')->group(function () {
