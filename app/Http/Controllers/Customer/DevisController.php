@@ -24,7 +24,7 @@ class DevisController extends Controller
 
     public function index()
     {
-        $devis = Devis::with('service')->where('user_id', Auth::id())->get();
+        $devis = Devis::with('service', 'agency')->where('user_id', Auth::id())->get();
 
         return Inertia::render('Customer/Devis', [
             'devis' => $devis

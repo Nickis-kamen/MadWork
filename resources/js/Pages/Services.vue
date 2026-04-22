@@ -7,12 +7,14 @@ import { ref, watch, computed } from 'vue'
 const props = defineProps({
     services: Object, // Changé en Object pour la pagination
     agencies: Array,
+    categories: Array,
     filters: Object,
 });
 
 // État local pour les filtres
 const searchTerm = ref(props.filters?.search || '');
 const selectedAgency = ref(props.filters?.agency_id || '');
+const selectedCategory = ref(props.filters?.category_id || '');
 const currentPage = ref(props.filters?.page || 1);
 
 // Debounce pour la recherche
@@ -24,6 +26,7 @@ const applyFilters = () => {
 
     if (searchTerm.value) query.search = searchTerm.value;
     if (selectedAgency.value) query.agency_id = selectedAgency.value;
+    if (selectedCategory.value) query.category_id = selectedCategory.value;
     if (currentPage.value > 1) query.page = currentPage.value;
 
     router.get('/services', query, {
@@ -47,17 +50,23 @@ watch(selectedAgency, () => {
     applyFilters();
 });
 
+watch(selectedCategory, () => {
+    currentPage.value = 1;
+    applyFilters();
+});
+
 // Réinitialiser les filtres
 const resetFilters = () => {
     searchTerm.value = '';
     selectedAgency.value = '';
+    selectedCategory.value = '';
     currentPage.value = 1;
     applyFilters();
 };
 
 // Vérifier si des filtres sont actifs
 const hasActiveFilters = computed(() => {
-    return searchTerm.value || selectedAgency.value;
+    return searchTerm.value || selectedAgency.value || selectedCategory.value;
 });
 
 // Tronquer la description
@@ -101,8 +110,21 @@ const changePage = (page) => {
                             />
                         </div>
 
+                        <!-- Filtre par catégorie -->
+                        <div class="md:w-52">
+                            <select
+                                v-model="selectedCategory"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#c10e46] focus:border-transparent transition-all bg-white"
+                            >
+                                <option value="">Toutes les catégories</option>
+                                <option v-for="category in categories" :key="category.id" :value="category.id">
+                                    {{ category.title }}
+                                </option>
+                            </select>
+                        </div>
+
                         <!-- Filtre par agence -->
-                        <div class="md:w-64">
+                        <div class="md:w-52">
                             <select
                                 v-model="selectedAgency"
                                 class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#c10e46] focus:border-transparent transition-all bg-white"
@@ -121,7 +143,6 @@ const changePage = (page) => {
                             class="px-4 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl transition-all duration-300 flex items-center justify-center gap-2"
                         >
                             <X class="w-5 h-5" />
-                            <span class="hidden sm:inline">Réinitialiser</span>
                         </button>
                     </div>
 

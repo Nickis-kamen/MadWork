@@ -2,9 +2,22 @@
 import { Link, usePage } from '@inertiajs/vue3';
 import ApplicationLogo from './ApplicationLogo.vue';
 import { computed } from 'vue';
+import { PiggyBank } from 'lucide-vue-next';
 
 const user = computed(() => usePage().props.auth.user)
+const isCustomer = computed(() => user.value?.role === 'customer')
 
+const balance = computed(() => user.value?.balance.amount || 0)
+
+// Formater le montant
+const formatAmount = (amount) => {
+    return new Intl.NumberFormat('fr-MG', {
+        style: 'currency',
+        currency: 'MGA',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0
+    }).format(amount);
+};
 </script>
 
 <template>
@@ -37,11 +50,29 @@ const user = computed(() => usePage().props.auth.user)
                         >
                             Agences
                         </Link>
+                        <Link
+                            href="/services"
+                            class="text-white hover:text-pink-600 hover:bg-pink-50 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
+                        >
+                            Services
+                        </Link>
+                        <Link v-if="isCustomer"
+                            href="/my-devis"
+                            class="text-white hover:text-pink-600 hover:bg-pink-50 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
+                        >
+                            Vos devis
+                        </Link>
                     </div>
                 </div>
 
                 <!-- Bouton Connexion -->
-                <div class="flex items-center space-x-4">
+                <div class="flex items-center space-x-3">
+                    <Link href="/balance">
+                        <p class="bg-amber-500 p-2 rounded-xl flex gap-2 items-center font-bold text-white">
+                            <PiggyBank />
+                            {{ formatAmount(balance) }}
+                        </p>
+                    </Link>
                     <Link v-if="!user"
                         href="/login"
                         class="bg-pink-600 hover:bg-pink-700 text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2"

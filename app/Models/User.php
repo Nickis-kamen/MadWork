@@ -67,4 +67,14 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Category::class);
     }
+
+    public function balance()
+    {
+        return $this->hasOne(Balance::class);
+    }
+
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class);
+    }
 }

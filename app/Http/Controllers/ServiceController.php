@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Agency;
+use App\Models\Category;
 use App\Models\Service;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -27,15 +28,22 @@ class ServiceController extends Controller
             $query->where('agency_id', $request->agency_id);
         }
 
+        // Filtre par catégorie
+        if ($request->filled('category_id')) {
+            $query->where('category_id', $request->category_id);
+        }
+
         // Pagination (12 éléments par page)
         $services = $query->paginate(12);
 
         $agencies = Agency::all();
-        
+        $categories = Category::all();
+
         return Inertia::render('Services', [
             'services' => $services,
             'agencies' => $agencies,
-            'filters' => $request->only(['search', 'agency_id', 'page']),
+            'categories' => $categories,
+            'filters' => $request->only(['search', 'agency_id', 'category_id', 'page']),
         ]);
     }
 

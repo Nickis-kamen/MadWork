@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BalanceController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ServiceController;
@@ -12,6 +13,10 @@ Route::get('/services', [ServiceController::class, 'index'])->name('services.ind
 Route::get('/services/{service}', [ServiceController::class, 'show'])->name('services.show');
 
 Route::middleware('auth')->group(function () {
+    Route::get('/balance', [BalanceController::class, 'index'])->name('balance.index');
+    Route::post('/balance/deposit', [BalanceController::class, 'deposit'])->name('balance.deposit');
+    Route::post('/balance/withdraw', [BalanceController::class, 'withdraw'])->name('balance.withdraw');
+
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
