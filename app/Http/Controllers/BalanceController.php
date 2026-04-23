@@ -32,7 +32,7 @@ class BalanceController extends Controller
 
         // Create a new transaction
         Transaction::create([
-            'reference' => uniqid('txn_'),
+            'reference' => 'TXN-' . uniqid(),
             'user_id' => Auth::id(),
             'type' => 'deposit',
             'method' => $request->method,
@@ -80,7 +80,7 @@ class BalanceController extends Controller
 
         // Create a new transaction
         Transaction::create([
-            'reference' => uniqid('txn_'),
+            'reference' => 'TXN-' . uniqid(),
             'user_id' => Auth::id(),
             'type' => 'withdrawal',
             'method' => $request->method,

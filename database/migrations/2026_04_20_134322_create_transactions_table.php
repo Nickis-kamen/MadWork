@@ -16,13 +16,15 @@ return new class extends Migration
             $table->string('reference')->unique();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->enum('type', ['deposit', 'withdrawal', 'purchase', 'sale', 'subscription']);
-            $table->enum('method', ['mvola', 'airtelmoney', 'orangemoney', 'visa']);
-            $table->string('number');
+            $table->enum('payment_stage', ['first','final'])->nullable();
+            $table->enum('method', ['mvola', 'airtelmoney', 'orangemoney', 'visa'])->nullable();
+            $table->string('number')->nullable();
             $table->float('amount');
             $table->foreignId('order_id')->nullable()->constrained()->onDelete('set null');
             $table->foreignId('subscription_id')->nullable()->constrained()->onDelete('set null');
+            $table->foreignId('devis_id')->nullable()->constrained()->onDelete('set null');
             $table->enum('status', ['pending', 'completed', 'failed', 'cancelled'])->default('pending');
-            $table->Text('descripption')->nullable();
+            $table->Text('description')->nullable();
             $table->timestamps();
         });
     }

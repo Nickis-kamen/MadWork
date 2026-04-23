@@ -9,8 +9,15 @@ class Devis extends Model
 {
     /** @use HasFactory<\Database\Factories\DevisFactory> */
     use HasFactory;
+
+    public function getRouteKeyName()
+    {
+        return 'reference';
+    }
+
     protected $fillable = [
         'user_id',
+        'reference',
         'title',
         'service_id',
         'agency_id',
@@ -37,5 +44,10 @@ class Devis extends Model
     public function agency()
     {
         return $this->belongsTo(Agency::class);
+    }
+
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class);
     }
 }

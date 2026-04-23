@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
 use App\Models\Devis;
+use App\Models\Order;
 use App\Models\Service;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -52,6 +54,7 @@ class DevisController extends Controller
 
         Devis::create([
             'user_id' => Auth::id(),
+            'reference' => 'DEV-' . uniqid(),
             'service_id' => $request->service_id,
             'agency_id' => $service->agency_id,
             'title' => $request->title,
@@ -64,6 +67,33 @@ class DevisController extends Controller
         return redirect('/my-devis')->with([
             'message' => 'Demande de devis soumise avec succès !',
             'type' => 'success' // ou 'error', 'warning', 'info'
+        ]);
+    }
+
+    public function accept(Devis $devis)
+    {
+        $devis->update([
+            'status' => 'accepted'
+        ]);
+
+        $base = $devis->price * 0.5;
+        $commission = $base * 0.08;
+        $total = $base + $commission;
+
+        $transaction = Transaction::create([
+            'reference' => 'TXN-' . uniqid(),
+            'user_id' => Auth::id(),
+            'type' => 'purchase',
+            'payment_stage' => 'first',
+            'amount' => $total,
+            'status' => 'pending',
+            'devis_id' => $devis->id,
+            'description' => 'Acompte devis #' . $devis->reference,
+        ]);
+
+        return redirect('/payment/' . $transaction->reference)->with([
+            'message' => 'Devis accepté avec succès !',
+            'type' => 'success', // ou 'error', 'warning', 'info'
         ]);
     }
 }

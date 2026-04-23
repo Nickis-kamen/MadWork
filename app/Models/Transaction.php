@@ -10,6 +10,11 @@ class Transaction extends Model
     /** @use HasFactory<\Database\Factories\TransactionFactory> */
     use HasFactory;
 
+    public function getRouteKeyName()
+    {
+        return 'reference';
+    }
+
     protected $fillable = [
         'reference',
         'user_id',
@@ -19,7 +24,10 @@ class Transaction extends Model
         'amount',
         'order_id',
         'subscription_id',
-        'status'
+        'devis_id',
+        'status',
+        'description',
+        'payment_stage',
     ];
 
     public function user()
@@ -35,5 +43,10 @@ class Transaction extends Model
     public function subscription()
     {
         return $this->belongsTo(Subscription::class);
+    }
+
+    public function devis()
+    {
+        return $this->belongsTo(Devis::class);
     }
 }

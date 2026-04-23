@@ -56,7 +56,7 @@ const closeModal = () => {
 
 // Fonction pour soumettre la proposition (passe le statut à "proposed")
 const submitProposal = () => {
-    router.put(`/agency/my-devis/${selectedDevi.value.id}/propose`, {
+    router.put(`/agency/my-devis/${selectedDevi.value.reference}/propose`, {
         price_agency: formData.value.price_agency,
         delai_agency: formData.value.delai_agency,
         description_agency: formData.value.description_agency,
@@ -68,11 +68,10 @@ const submitProposal = () => {
             selectedDevi.value.description_agency = formData.value.description_agency;
             selectedDevi.value.status = 'proposed';
 
-            const index = props.devis.findIndex(d => d.id === selectedDevi.value.id);
+            const index = props.devis.findIndex(d => d.reference === selectedDevi.value.reference);
             if (index !== -1) {
                 props.devis[index] = { ...selectedDevi.value };
             }
-            window.location.reload();
             closeModal();
         },
         onError: (errors) => {
@@ -84,12 +83,12 @@ const submitProposal = () => {
 // Fonction pour refuser le devis
 const refuseDevis = () => {
     if (confirm('Êtes-vous sûr de vouloir refuser ce devis ?')) {
-        router.put(`/agency/devis/${selectedDevi.value.id}`, {
+        router.put(`/agency/devis/${selectedDevi.value.reference}`, {
             status: 'refused'
         }, {
             onSuccess: () => {
                 selectedDevi.value.status = 'refused';
-                const index = props.devis.findIndex(d => d.id === selectedDevi.value.id);
+                const index = props.devis.findIndex(d => d.reference === selectedDevi.value.reference);
                 if (index !== -1) {
                     props.devis[index] = { ...selectedDevi.value };
                 }
@@ -166,8 +165,8 @@ const hasProposal = (devi) => devi.price_agency || devi.delai_agency || devi.des
 
                         <div class="grid grid-cols-2 gap-3 text-sm mb-3">
                             <div>
-                                <p class="text-gray-500 text-xs">ID</p>
-                                <p class="font-medium text-xs font-mono">#{{ devi.id }}</p>
+                                <p class="text-gray-500 text-xs">REF</p>
+                                <p class="font-medium text-xs font-mono">#{{ devi.reference }}</p>
                             </div>
                             <div>
                                 <p class="text-gray-500 text-xs">Client</p>
@@ -216,7 +215,7 @@ const hasProposal = (devi) => devi.price_agency || devi.delai_agency || devi.des
                     <table class="min-w-full divide-y">
                         <thead class="bg-gray-50">
                             <tr>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500">ID</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500">REF</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500">Client / Service</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500">Date demande</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500">Délai souhaité</th>
@@ -228,7 +227,7 @@ const hasProposal = (devi) => devi.price_agency || devi.delai_agency || devi.des
                         </thead>
                         <tbody class="bg-white divide-y">
                             <tr v-for="devi in devis" :key="devi.id" class="hover:bg-gray-50">
-                                <td class="px-6 py-4 text-sm font-mono">#{{ devi.id }}</td>
+                                <td class="px-6 py-4 text-sm font-mono">{{ devi.reference }}</td>
                                 <td class="px-6 py-4">
                                     <p class="text-sm font-medium">{{ devi.user.name || 'N/A' }}</p>
                                     <p class="text-xs text-gray-500">{{ devi.service.title }} - {{ devi.title }}</p>
@@ -282,7 +281,7 @@ const hasProposal = (devi) => devi.price_agency || devi.delai_agency || devi.des
                             </div>
                             <div>
                                 <h3 class="text-xl font-bold" :style="{ color: '#1e002f' }">{{ selectedDevi.title }}</h3>
-                                <p class="text-sm text-gray-500">#{{ selectedDevi.id }} • Service: {{ selectedDevi.service.title }} • Client: {{ selectedDevi.user?.name || 'N/A' }}</p>
+                                <p class="text-sm text-gray-500">#{{ selectedDevi.reference }} • Service: {{ selectedDevi.service.title }} • Client: {{ selectedDevi.user?.name || 'N/A' }}</p>
                             </div>
                         </div>
                         <button @click="closeModal" class="p-2 rounded-lg hover:bg-gray-100 transition-colors">

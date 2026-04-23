@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('devis', function (Blueprint $table) {
             $table->id();
+            $table->string('reference')->unique();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('title');
             $table->foreignId('service_id')->nullable()->constrained()->onDelete('set null');

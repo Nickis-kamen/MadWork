@@ -7,7 +7,7 @@ import { PiggyBank } from 'lucide-vue-next';
 const user = computed(() => usePage().props.auth.user)
 const isCustomer = computed(() => user.value?.role === 'customer')
 
-const balance = computed(() => user.value?.balance.amount || 0)
+const balance = computed(() => user.value?.balance?.amount || 0)
 
 // Formater le montant
 const formatAmount = (amount) => {
@@ -67,7 +67,8 @@ const formatAmount = (amount) => {
 
                 <!-- Bouton Connexion -->
                 <div class="flex items-center space-x-3">
-                    <Link href="/balance">
+                    <Link v-if="user"
+                    href="/balance">
                         <p class="bg-amber-500 p-2 rounded-xl flex gap-2 items-center font-bold text-white">
                             <PiggyBank />
                             {{ formatAmount(balance) }}

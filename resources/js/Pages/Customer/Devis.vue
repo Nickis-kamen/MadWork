@@ -191,7 +191,7 @@ const isPending = (status) => status === 'pending';
                     <!-- En-tête -->
                     <thead class="bg-gray-50">
                         <tr>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">REF</th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Titre / Service</th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Agence</th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date demande</th>
@@ -206,7 +206,7 @@ const isPending = (status) => status === 'pending';
                     <tbody class="bg-white divide-y" :style="{ borderColor: '#c10e4620' }">
                         <tr v-for="devi in devis" :key="devi.id" class="hover:bg-gray-50 transition-colors">
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-mono" :style="{ color: '#1e002f' }">
-                                #{{ devi.id }}
+                                {{ devi.reference }}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <p class="text-sm font-medium" :style="{ color: '#1e002f' }">{{ devi.title }}</p>
@@ -304,7 +304,7 @@ const isPending = (status) => status === 'pending';
                         </div>
                         <div>
                             <h3 class="text-xl font-bold" :style="{ color: '#1e002f' }">{{ selectedDevi.title }}</h3>
-                            <p class="text-sm text-gray-500">Devis #{{ selectedDevi.id }} • {{ selectedDevi.service.title }}</p>
+                            <p class="text-sm text-gray-500">Devis #{{ selectedDevi.reference }} • {{ selectedDevi.service.title }}</p>
                         </div>
                     </div>
                     <button
@@ -430,7 +430,7 @@ const isPending = (status) => status === 'pending';
                     <!-- Actions du devis -->
                     <div v-if="selectedDevi.status === 'proposed'" class="border-t pt-4 flex justify-end space-x-3" :style="{ borderColor: '#c10e4620' }">
                         <Link
-                            :href="`/customer/devis/${selectedDevi.id}/accept`"
+                            :href="`/devis/${selectedDevi.reference}/accept`"
                             method="post"
                             as="button"
                             class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm font-medium"
@@ -438,7 +438,7 @@ const isPending = (status) => status === 'pending';
                             Accepter le devis
                         </Link>
                         <Link
-                            :href="`/customer/devis/${selectedDevi.id}/refuse`"
+                            :href="`/customer/devis/${selectedDevi.reference}/refuse`"
                             method="post"
                             as="button"
                             class="px-4 py-2 border border-red-300 text-red-600 rounded-lg hover:bg-red-50 transition-colors text-sm font-medium"
