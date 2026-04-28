@@ -39,4 +39,9 @@ class Agency extends Model
     {
         return $this->hasMany(Devis::class);
     }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
 }

@@ -63,6 +63,15 @@ const formatDate = (dateString) => {
 
 // Vérifier si le devis est en attente
 const isPending = (status) => status === 'pending';
+
+const formatAmount = (amount) => {
+    return new Intl.NumberFormat('fr-MG', {
+        style: 'currency',
+        currency: 'MGA',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0
+    }).format(amount);
+};
 </script>
 
 <template>
@@ -128,7 +137,7 @@ const isPending = (status) => status === 'pending';
                         </div>
                         <div v-if="devi.price && !isPending(devi.status)">
                             <p class="text-gray-500 text-xs">Montant</p>
-                            <p class="font-medium text-xs" :style="{ color: '#c10e46' }">{{ devi.price }} Ar</p>
+                            <p class="font-medium text-xs" :style="{ color: '#c10e46' }">{{ formatAmount(devi.price) }}</p>
                         </div>
                     </div>
 
@@ -222,11 +231,11 @@ const isPending = (status) => status === 'pending';
                                 {{ devi.delai }} jours
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                                {{ devi.budget }} Ar
+                                {{ formatAmount(devi.budget) }}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm">
                                 <span v-if="devi.price && !isPending(devi.status)" :style="{ color: '#c10e46' }" class="font-semibold">
-                                    {{ devi.price }} Ar
+                                    {{ formatAmount(devi.price) }}
                                 </span>
                                 <span v-else class="text-gray-400">-</span>
                             </td>
@@ -398,7 +407,7 @@ const isPending = (status) => status === 'pending';
                                     }"
                                 >
                                     <p v-if="selectedDevi.price && !isPending(selectedDevi.status)" class="text-sm font-semibold" :style="{ color: '#c10e46' }">
-                                        {{ selectedDevi.price }} Ar
+                                        {{ formatAmount(selectedDevi.price) }}
                                     </p>
                                     <p v-else class="text-sm text-gray-400 italic">
                                         Non défini

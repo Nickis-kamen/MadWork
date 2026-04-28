@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
+use App\Models\Balance;
 use App\Models\Devis;
 use App\Models\Order;
 use App\Models\Transaction;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -18,6 +20,8 @@ class PaymentController extends Controller
         $balance = Auth::user()->balance ? Auth::user()->balance->amount : 0;
 
         $devis = $transaction->devis;
+        $agency = $devis->agency;
+        $service = $devis->service;
 
         $price = $devis->price;
         $acompte = $price * 0.5; // 50% du prix total
@@ -25,7 +29,10 @@ class PaymentController extends Controller
         $amountToPay = $acompte + $commission;
         $remainingAmount = $price - $acompte;
         return Inertia::render('Customer/Payment', [
+            'agency' => $agency,
+            'service' => $service,
             'transaction' => $transaction,
+            'devis' => $devis,
             'balance' => $balance,
             'price' => $price,
             'commission' => $commission,
@@ -34,30 +41,11 @@ class PaymentController extends Controller
         ]);
     }
 
-    public function payFirst(Devis $devis)
+    public function payFirst(Transaction $transaction)
     {
-        $devis->update([
-        'status' => 'accepted'
-        ]);
-
+        $devis = $transaction->devis;
         $base = $devis->price * 0.5;
         $commission = $base * 0.08;
-        $total = $base + $commission;
-
-        $transaction = Transaction::create([
-            'reference' => 'TXN-' . uniqid(),
-            'user_id' => Auth::id(),
-            'type' => 'purchase',
-            'payment_stage' => 'first',
-            'amount' => $total,
-            'status' => 'pending',
-            'description' => 'Acompte devis #' . $devis->reference,
-        ]);
-
-        $transaction->update([
-            'status' => 'completed'
-        ]);
-
         // créer order
         $order = Order::create([
             'client_id' => $devis->user_id,
@@ -65,15 +53,39 @@ class PaymentController extends Controller
             'service_id' => $devis->service_id,
             'devis_id' => $devis->id,
             'amount' => $devis->price,
-            'commission' => $transaction->amount * 0.08,
+            'commission' => $commission,
             'status' => 'in_progress'
-        ]);
+            ]);
 
-        // lier transaction → order
+        $user_agency = $devis->agency->user;
+        $admin = User::where('role', 'admin')->first();
+
+        Balance::where('user_id', Auth::id())->decrement('amount', $transaction->amount);
+        Balance::where('user_id', $user_agency->id)->increment('amount', $base);
+        Balance::where('user_id', $admin->id)->increment('amount', $commission);
+
         $transaction->update([
-            'order_id' => $order->id
+            'order_id' => $order->id,
+            'status' => 'completed'
         ]);
 
-        return redirect()->route('orders.show', $order->id);
+        $transaction_agency = Transaction::where('user_id', $user_agency->id)->where('devis_id', $devis->id);
+
+        $transaction_agency->update([
+            'order_id' => $order->id,
+            'status' => 'completed'
+        ]);
+
+        $transaction_admin = Transaction::where('user_id', $admin->id)->where('devis_id', $devis->id);
+
+        $transaction_admin->update([
+            'order_id' => $order->id,
+            'status' => 'completed'
+        ]);
+
+        return redirect('/balance')->with([
+            'message' => 'Paiement effectué avec succès',
+            'type' => 'success', // ou 'error', 'warning', 'info'
+        ]);
     }
 }

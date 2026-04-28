@@ -26,7 +26,7 @@ class Order extends Model
 
     public function agency()
     {
-        return $this->belongsTo(User::class, 'agency_id');
+        return $this->belongsTo(Agency::class, 'agency_id');
     }
 
     public function service()

@@ -14,7 +14,10 @@ class BalanceController extends Controller
     public function index()
     {
         $balance = Auth::user()->balance ? Auth::user()->balance->amount : 0;
-        $transactions = Transaction::where('user_id', Auth::id())->orderBy('created_at', 'desc')->get();
+
+        $transactions = Transaction::where('user_id', Auth::id())->with('order.agency', 'order.service', 'order.client')->orderBy('created_at', 'desc')->get();
+
+        // dd($transactions);
         return Inertia::render('Balance', [
             'balance' => $balance,
             'transactions' => $transactions

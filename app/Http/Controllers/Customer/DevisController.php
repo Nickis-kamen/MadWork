@@ -7,6 +7,7 @@ use App\Models\Devis;
 use App\Models\Order;
 use App\Models\Service;
 use App\Models\Transaction;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -89,6 +90,29 @@ class DevisController extends Controller
             'status' => 'pending',
             'devis_id' => $devis->id,
             'description' => 'Acompte devis #' . $devis->reference,
+        ]);
+        Transaction::create([
+            'reference' => 'TXN-' . uniqid(),
+            'user_id' => $devis->agency->user->id,
+            'type' => 'sale',
+            'payment_stage' => 'first',
+            'amount' => $base,
+            'status' => 'pending',
+            'devis_id' => $devis->id,
+            'description' => 'Acomptedevis #' . $devis->reference,
+        ]);
+
+        $admin = User::where('role', 'admin')->first();
+
+        Transaction::create([
+            'reference' => 'TXN-' . uniqid(),
+            'user_id' => $admin->id,
+            'type' => 'sale',
+            'payment_stage' => 'first',
+            'amount' => $total,
+            'status' => 'pending',
+            'devis_id' => $devis->id,
+            'description' => 'Acomptedevis #' . $devis->reference,
         ]);
 
         return redirect('/payment/' . $transaction->reference)->with([

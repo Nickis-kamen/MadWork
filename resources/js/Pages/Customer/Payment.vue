@@ -16,7 +16,10 @@ import {
 } from 'lucide-vue-next';
 
 const props = defineProps({
+    service: Object,
+    agency: Object,
     devis: Object,
+    transaction: Object,
     price: Number,
     commission: Number,
     amountToPay: Number,
@@ -51,7 +54,7 @@ const submitPayment = () => {
     if (!isBalanceSufficient.value) return;
 
     processing.value = true;
-    router.post(`/payment/${props.devis.id}/process`, {}, {
+    router.post(`/payment/${props.transaction?.reference}/first`, {}, {
         onError: (errors) => {
             console.error(errors);
             processing.value = false;
@@ -122,7 +125,6 @@ const submitPayment = () => {
                                 <div class="flex justify-between items-center mb-2">
                                     <span class="text-gray-700 flex items-center">
                                         Commission (8%)
-                                        <Percent class="w-4 h-4 ml-1 text-gray-400" />
                                     </span>
                                     <span class="font-semibold text-gray-900">{{ formatAmount(commission) }}</span>
                                 </div>
@@ -212,22 +214,22 @@ const submitPayment = () => {
                                 </div>
                                 <div class="flex-1">
                                     <p class="font-medium text-gray-900">{{ devis.title }}</p>
-                                    <p class="text-sm text-gray-600">Devis #{{ devis.id }}</p>
+                                    <p class="text-sm text-gray-600">Devis #{{ devis.reference }}</p>
                                 </div>
                             </div>
 
                             <div class="space-y-2">
                                 <div class="flex justify-between">
                                     <span class="text-gray-600">Service</span>
-                                    <span class="font-medium text-gray-900">{{ devis.service?.title || 'Non spécifié' }}</span>
+                                    <span class="font-medium text-gray-900">{{ service?.title || 'Non spécifié' }}</span>
                                 </div>
                                 <div class="flex justify-between">
                                     <span class="text-gray-600">Agence</span>
-                                    <span class="font-medium text-gray-900">{{ devis.agency?.name || 'Non spécifiée' }}</span>
+                                    <span class="font-medium text-gray-900">{{ agency?.name || 'Non spécifiée' }}</span>
                                 </div>
                                 <div class="flex justify-between">
                                     <span class="text-gray-600">Délai</span>
-                                    <span class="font-medium text-gray-900">{{ devis.delai_agency || devis.delai }} jours</span>
+                                    <span class="font-medium text-gray-900">{{ devis.delai_agency }} jours</span>
                                 </div>
                                 <div class="flex justify-between">
                                     <span class="text-gray-600">Date</span>

@@ -16,4 +16,5 @@ Route::group(['middleware' => 'customer'],function()
     // Route::get('devis/{devis}/refuse', [DevisController::class, 'refuse']) -> name('devis.refuse');
 
     Route::get('payment/{transaction}', [PaymentController::class, 'index']) -> name('payment.index');
+    Route::post('payment/{transaction}/first', [PaymentController::class, 'payFirst']) -> name('payment.first');
 });
