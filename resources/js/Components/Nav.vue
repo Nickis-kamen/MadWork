@@ -45,22 +45,22 @@ const formatAmount = (amount) => {
                             A propos
                         </Link>
                         <Link
-                            href="/agencies"
-                            class="text-white hover:text-pink-600 hover:bg-pink-50 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
-                        >
-                            Agences
-                        </Link>
-                        <Link
-                            href="/services"
-                            class="text-white hover:text-pink-600 hover:bg-pink-50 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
+                        href="/services"
+                        class="text-white hover:text-pink-600 hover:bg-pink-50 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
                         >
                             Services
                         </Link>
                         <Link v-if="isCustomer"
                             href="/my-devis"
                             class="text-white hover:text-pink-600 hover:bg-pink-50 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
-                        >
+                            >
                             Vos devis
+                        </Link>
+                        <Link
+                            href="/orders"
+                            class="text-white hover:text-pink-600 hover:bg-pink-50 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
+                        >
+                            Vos commandes
                         </Link>
                     </div>
                 </div>

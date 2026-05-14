@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
+            $table->string('reference')->unique();
             $table->foreignId('client_id')->nullable()->constrained('users')->onDelete('set null');
             $table->foreignId('agency_id')->nullable()->constrained('agencies')->onDelete('set null');
             $table->foreignId('service_id')->nullable()->constrained('services')->onDelete('set null');
@@ -20,6 +21,9 @@ return new class extends Migration
             $table->float('amount');
             $table->float('commission');
             $table->enum('status', ['pending','in_progress','delivered','completed','cancelled'])->default('pending');
+            $table->enum('payment_status', ['unpaid','paid'])->default('unpaid');
+            $table->integer('progress')->default(0); // 0 à 100%
+            $table->text('progress_note')->nullable(); // Notes sur la progression
             $table->timestamps();
         });
     }

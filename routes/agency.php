@@ -3,6 +3,7 @@
 use App\Http\Controllers\Agency\AgencyController;
 use App\Http\Controllers\Agency\DashboardController;
 use App\Http\Controllers\Agency\DevisController;
+use App\Http\Controllers\Agency\OrderController;
 use App\Http\Controllers\Agency\ServiceController;
 use Illuminate\Support\Facades\Route;
 
@@ -27,4 +28,8 @@ Route::group(['middleware' => 'agency', 'prefix' => 'agency', 'as' => 'agency.']
 
     Route::get('my-devis', [DevisController::class, 'index']) -> name('devis.index');
     Route::put('my-devis/{devis}/propose', [DevisController::class, 'propose']) -> name('devis.propose');
+
+    Route::get('orders', [OrderController::class, 'index']) -> name('orders.index');
+    Route::put('/orders/{id}/progress', [OrderController::class, 'updateProgress'])->name('orders.progress');
+    Route::put('/orders/{id}/delivered', [OrderController::class, 'delivered'])->name('orders.delivered');
 });

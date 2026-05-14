@@ -16,7 +16,7 @@ class DevisController extends Controller
         $agencyId = Auth::user()->agency->id;
 
         $devis = Devis::with('user', 'service')->where('agency_id', $agencyId)->get();
-
+        // dd($devis->toArray());
         return Inertia::render('Agency/Devis', [
             'devis' => $devis
         ]);

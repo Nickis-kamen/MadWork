@@ -156,7 +156,7 @@ if(isAgency.value){
         {
             id: 'projects',
             name: 'Projets Actifs',
-            href: '/agency/projects',
+            href: '/agency/orders',
             icon: Folder,
             badge: 0
         },

@@ -28,6 +28,7 @@ const props = defineProps({
     }
 });
 
+const devis = ref([...props.devis]);
 // État pour le popup
 const showModal = ref(false);
 const selectedDevi = ref(null);
@@ -68,11 +69,12 @@ const submitProposal = () => {
             selectedDevi.value.description_agency = formData.value.description_agency;
             selectedDevi.value.status = 'proposed';
 
-            const index = props.devis.findIndex(d => d.reference === selectedDevi.value.reference);
+            const index = devis.value.findIndex(d => d.reference === selectedDevi.value.reference);
             if (index !== -1) {
-                props.devis[index] = { ...selectedDevi.value };
+                devis.value[index] = { ...selectedDevi.value };
             }
             closeModal();
+            window.location.reload();
         },
         onError: (errors) => {
             console.error('Erreur:', errors);
@@ -88,9 +90,9 @@ const refuseDevis = () => {
         }, {
             onSuccess: () => {
                 selectedDevi.value.status = 'refused';
-                const index = props.devis.findIndex(d => d.reference === selectedDevi.value.reference);
+                const index = devis.value.findIndex(d => d.reference === selectedDevi.value.reference);
                 if (index !== -1) {
-                    props.devis[index] = { ...selectedDevi.value };
+                    devis.value[index] = { ...selectedDevi.value };
                 }
                 closeModal();
             }
@@ -189,7 +191,7 @@ const hasProposal = (devi) => devi.price_agency || devi.delai_agency || devi.des
                         <p class="text-xs text-gray-500 line-clamp-2 mb-3">{{ devi.description }}</p>
 
                         <div v-if="hasProposal(devi)" class="mb-3 p-2 rounded-lg" :style="{ background: '#c10e4610' }">
-                            <p class="text-xs" :style="{ color: '#c10e46' }">💰 {{ devi.price_agency }} € - ⏱️ {{ devi.delai_agency }} jours</p>
+                            <p class="text-xs" :style="{ color: '#c10e46' }">💰 {{ devi.price }} Ar - ⏱️ {{ devi.delai_agency }} jours</p>
                         </div>
 
                         <div class="flex justify-end space-x-2">

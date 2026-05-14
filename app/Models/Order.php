@@ -12,11 +12,16 @@ class Order extends Model
 
     protected $fillable = [
         'client_id',
+        'reference',
         'agency_id',
         'service_id',
+        'devis_id',
         'amount',
         'commission',
-        'status'
+        'progress',
+        'progress_note',
+        'status',
+        'payment_status'
     ];
 
     public function client()
@@ -32,6 +37,11 @@ class Order extends Model
     public function service()
     {
         return $this->belongsTo(Service::class);
+    }
+
+    public function devis()
+    {
+        return $this->belongsTo(Devis::class);
     }
 
     public function transactions()

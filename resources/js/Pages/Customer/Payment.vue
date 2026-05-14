@@ -12,7 +12,9 @@ import {
   FileText,
   Percent,
   TrendingUp,
-  ArrowRight
+  ArrowRight,
+  Package,
+  Truck
 } from 'lucide-vue-next';
 
 const props = defineProps({
@@ -24,7 +26,11 @@ const props = defineProps({
     commission: Number,
     amountToPay: Number,
     remainingAmount: Number,
-    balance: Number
+    balance: Number,
+    paymentStage: {
+        type: String,
+        default: 'first'
+    }
 });
 
 const processing = ref(false);
@@ -32,6 +38,29 @@ const processing = ref(false);
 // Vérifier si le solde est suffisant
 const isBalanceSufficient = computed(() => {
     return props.balance >= props.amountToPay;
+});
+
+// Informations sur le stage de paiement
+const paymentStageInfo = computed(() => {
+    if (props.paymentStage === 'first') {
+        return {
+            title: 'Premier paiement (Acompte 50%)',
+            description: 'Vous payez 50% du montant total aujourd\'hui pour démarrer le projet.',
+            nextStep: 'Le projet sera démarré immédiatement après validation.',
+            finalAmount: props.remainingAmount,
+            icon: TrendingUp,
+            color: 'blue'
+        };
+    } else {
+        return {
+            title: 'Paiement final (Solde 50%)',
+            description: 'Vous payez le solde restant de 50% pour finaliser la livraison.',
+            nextStep: 'Après validation, l\'agence procédera à la livraison finale du projet.',
+            finalAmount: 0,
+            icon: Truck,
+            color: 'green'
+        };
+    }
 });
 
 const formatAmount = (amount) => {
@@ -54,17 +83,43 @@ const submitPayment = () => {
     if (!isBalanceSufficient.value) return;
 
     processing.value = true;
-    router.post(`/payment/${props.transaction?.reference}/first`, {}, {
-        onError: (errors) => {
-            console.error(errors);
-            processing.value = false;
-        }
-    });
+    if (props.paymentStage === 'first')
+    {
+        router.post(`/payment/${props.transaction?.reference}/first`, {}, {
+            onError: (errors) => {
+                console.error(errors);
+                processing.value = false;
+            }
+        });
+    }else
+    {
+        router.post(`/payment/${props.transaction?.reference}/final`, {}, {
+            onError: (errors) => {
+                console.error(errors);
+                processing.value = false;
+            }
+        });
+    }
+};
+
+// Badge de stage
+const getStageBadge = () => {
+    if (props.paymentStage === 'first') {
+        return {
+            label: 'Acompte (50%)',
+            color: 'bg-blue-100 text-blue-800'
+        };
+    } else {
+        return {
+            label: 'Paiement final (Solde)',
+            color: 'bg-green-100 text-green-800'
+        };
+    }
 };
 </script>
 
 <template>
-    <Head title="Paiement - {{ devis.title }}" />
+    <Head :title="'Paiement - ' + (paymentStage === 'first' ? 'Acompte' : 'Solde final')" />
     <Nav />
 
     <div class="min-h-screen bg-gray-50 py-8">
@@ -81,11 +136,11 @@ const submitPayment = () => {
 
                 <div class="flex items-center space-x-3">
                     <div class="bg-gradient-to-r from-[#c10e46] to-[#1e002f] p-3 rounded-xl">
-                        <CreditCard class="w-8 h-8 text-white" />
+                        <component :is="paymentStageInfo.icon" class="w-8 h-8 text-white" />
                     </div>
                     <div>
-                        <h1 class="text-2xl font-bold text-gray-900">Paiement du service</h1>
-                        <p class="text-gray-600">Finalisez votre commande en toute sécurité</p>
+                        <h1 class="text-2xl font-bold text-gray-900">{{ paymentStageInfo.title }}</h1>
+                        <p class="text-gray-600">{{ paymentStageInfo.description }}</p>
                     </div>
                 </div>
             </div>
@@ -93,6 +148,13 @@ const submitPayment = () => {
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <!-- Formulaire de paiement -->
                 <div class="lg:col-span-2 space-y-6">
+                    <!-- Badge stage -->
+                    <div class="flex justify-end">
+                        <span class="px-4 py-2 rounded-full text-sm font-semibold" :class="getStageBadge().color">
+                            {{ getStageBadge().label }}
+                        </span>
+                    </div>
+
                     <!-- Détails du paiement -->
                     <div class="bg-white rounded-xl shadow-sm border p-6">
                         <h2 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
@@ -114,23 +176,49 @@ const submitPayment = () => {
 
                             <!-- Montant à payer -->
                             <div class="border rounded-lg p-4" :class="isBalanceSufficient ? 'border-green-200 bg-green-50' : 'border-red-200 bg-red-50'">
+                                <!-- Stage actuel -->
+                                <div class="mb-4 pb-4 border-b" :class="isBalanceSufficient ? 'border-green-200' : 'border-red-200'">
+                                    <div class="flex justify-between items-center mb-2">
+                                        <span class="text-gray-700">Stage de paiement</span>
+                                        <span class="font-semibold px-3 py-1 rounded-full text-sm" :class="paymentStage === 'first' ? 'bg-blue-100 text-blue-700' : 'bg-green-100 text-green-700'">
+                                            {{ paymentStage === 'first' ? 'Premier paiement' : 'Paiement final' }}
+                                        </span>
+                                    </div>
+                                </div>
+
                                 <div class="flex justify-between items-center mb-2">
                                     <span class="text-gray-700">Montant total du devis</span>
                                     <span class="font-semibold text-gray-900">{{ formatAmount(price) }}</span>
                                 </div>
+
+                                <!-- Afficher acompte déjà payé si paiement final -->
+                                <div v-if="paymentStage === 'final'" class="flex justify-between items-center mb-2 text-green-600">
+                                    <span class="flex items-center">
+                                        <CheckCircle class="w-4 h-4 mr-1" />
+                                        Acompte déjà payé (50%)
+                                    </span>
+                                    <span class="font-semibold">{{ formatAmount(price * 0.5) }}</span>
+                                </div>
+
                                 <div class="flex justify-between items-center mb-2">
-                                    <span class="text-gray-700">Acompte (50%)</span>
+                                    <span class="text-gray-700 flex items-center">
+                                        {{ paymentStage === 'first' ? 'Acompte (50%)' : 'Solde restant (50%)' }}
+                                    </span>
                                     <span class="font-semibold text-gray-900">{{ formatAmount(price * 0.5) }}</span>
                                 </div>
+
                                 <div class="flex justify-between items-center mb-2">
                                     <span class="text-gray-700 flex items-center">
                                         Commission (8%)
                                     </span>
                                     <span class="font-semibold text-gray-900">{{ formatAmount(commission) }}</span>
                                 </div>
+
                                 <div class="border-t pt-2 mt-2" :class="isBalanceSufficient ? 'border-green-200' : 'border-red-200'">
                                     <div class="flex justify-between items-center">
-                                        <span class="font-bold text-gray-900">Total à payer aujourd'hui</span>
+                                        <span class="font-bold text-gray-900">
+                                            {{ paymentStage === 'first' ? 'Total à payer aujourd\'hui' : 'Solde à payer' }}
+                                        </span>
                                         <span class="text-2xl font-bold text-[#c10e46]">{{ formatAmount(amountToPay) }}</span>
                                     </div>
                                 </div>
@@ -143,8 +231,8 @@ const submitPayment = () => {
                                     <div>
                                         <p class="text-red-800 font-medium">Solde insuffisant</p>
                                         <p class="text-red-700 text-sm mt-1">
-                                            Votre solde actuel est de {{ formatAmount(userBalance) }}.
-                                            Il vous manque {{ formatAmount(amountToPay - userBalance) }} pour effectuer ce paiement.
+                                            Votre solde actuel est de {{ formatAmount(balance) }}.
+                                            Il vous manque {{ formatAmount(amountToPay - balance) }} pour effectuer ce paiement.
                                         </p>
                                         <button
                                             @click="router.get('/balance')"
@@ -168,36 +256,93 @@ const submitPayment = () => {
                             >
                                 <div class="flex items-center justify-center">
                                     <Lock v-if="isBalanceSufficient" class="w-5 h-5 mr-2" />
-                                    <TrendingUp v-else class="w-5 h-5 mr-2" />
                                     {{ processing ? 'Traitement en cours...' : (isBalanceSufficient ? `Payer ${formatAmount(amountToPay)}` : 'Solde insuffisant') }}
                                 </div>
                             </button>
 
-                            <!-- Information -->
-                            <div class="bg-blue-50 rounded-lg p-3 text-sm text-blue-800">
+                            <!-- Information stage -->
+                            <div class="rounded-lg p-3 text-sm" :class="paymentStage === 'first' ? 'bg-blue-50 text-blue-800' : 'bg-green-50 text-green-800'">
                                 <p class="flex items-center">
-                                    <AlertCircle class="w-4 h-4 mr-2" />
-                                    Le paiement sera débité directement de votre solde
+                                    <component :is="paymentStageInfo.icon" class="w-4 h-4 mr-2" />
+                                    {{ paymentStageInfo.nextStep }}
                                 </p>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Informations de livraison -->
+                    <!-- Récapitulatif du paiement -->
                     <div class="bg-white rounded-xl shadow-sm border p-6">
                         <h2 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
                             <CheckCircle class="w-5 h-5 mr-2 text-green-600" />
-                            Reste à payer
+                            {{ paymentStage === 'first' ? 'Prochain paiement' : 'Finalisation' }}
                         </h2>
-                        <div class="bg-green-50 rounded-lg p-4">
+                        <div class="rounded-lg p-4" :class="paymentStage === 'first' ? 'bg-blue-50' : 'bg-green-50'">
                             <p class="text-gray-700 mb-2">
-                                Après validation de ce paiement, vous ne payerez que
-                                <span class="font-bold text-green-600">{{ formatAmount(remainingAmount) }}</span>
-                                à la livraison du projet.
+                                <span class="font-semibold">
+                                    {{ paymentStage === 'first' ? 'Reste à payer à la livraison :' : 'Statut final :' }}
+                                </span>
+                            </p>
+                            <p v-if="paymentStage === 'first'" class="text-2xl font-bold text-blue-600">
+                                {{ formatAmount(remainingAmount) }}
+                            </p>
+                            <p v-else class="text-green-600 font-medium flex items-center">
+                                <CheckCircle class="w-5 h-5 mr-2" />
+                                Plus aucun paiement à effectuer après celui-ci
                             </p>
                             <p class="text-sm text-gray-600 mt-2">
-                                Le projet sera démarré dès réception de l'acompte.
+                                {{ paymentStage === 'first'
+                                    ? 'Le deuxième paiement (50%) sera demandé à la livraison du projet.'
+                                    : 'Une fois le paiement validé, l\'agence procédera à la livraison finale.'
+                                }}
                             </p>
+                        </div>
+                    </div>
+
+                    <!-- Timeline des paiements -->
+                    <div class="bg-white rounded-xl shadow-sm border p-6">
+                        <h2 class="text-lg font-semibold text-gray-900 mb-4">Timeline des paiements</h2>
+                        <div class="relative">
+                            <!-- Ligne de progression -->
+                            <div class="absolute left-6 top-8 bottom-8 w-0.5 bg-gray-200"></div>
+
+                            <!-- Étape 1: Acompte -->
+                            <div class="relative flex items-start mb-8">
+                                <div class="flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center z-10"
+                                    :class="paymentStage === 'first' ? 'bg-blue-500' : 'bg-green-500'">
+                                    <TrendingUp class="w-6 h-6 text-white" />
+                                </div>
+                                <div class="ml-4 flex-1">
+                                    <div class="flex items-center justify-between">
+                                        <h3 class="font-semibold text-gray-900">Acompte (50%)</h3>
+                                        <span v-if="paymentStage === 'final'" class="text-green-600 text-sm flex items-center">
+                                            <CheckCircle class="w-4 h-4 mr-1" />
+                                            Payé
+                                        </span>
+                                        <span v-else class="text-blue-600 text-sm">À payer maintenant</span>
+                                    </div>
+                                    <p class="text-sm text-gray-600">{{ formatAmount(price * 0.5) }}</p>
+                                    <p class="text-xs text-gray-500 mt-1">Permet de démarrer le projet</p>
+                                </div>
+                            </div>
+
+                            <!-- Étape 2: Paiement final -->
+                            <div class="relative flex items-start">
+                                <div class="flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center z-10"
+                                    :class="paymentStage === 'final' ? 'bg-green-500' : 'bg-gray-300'">
+                                    <Truck class="w-6 h-6 text-white" />
+                                </div>
+                                <div class="ml-4 flex-1">
+                                    <div class="flex items-center justify-between">
+                                        <h3 class="font-semibold text-gray-900">Solde final (50%)</h3>
+                                        <span v-if="paymentStage === 'final'" class="text-green-600 text-sm flex items-center">
+                                            À payer maintenant
+                                        </span>
+                                        <span v-else class="text-gray-500 text-sm">À la livraison</span>
+                                    </div>
+                                    <p class="text-sm text-gray-600">{{ formatAmount(paymentStage === 'first' ? price * 0.5 : amountToPay) }}</p>
+                                    <p class="text-xs text-gray-500 mt-1">Permet la livraison finale du projet</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -244,24 +389,28 @@ const submitPayment = () => {
                                         <span class="font-medium text-gray-900">{{ formatAmount(price) }}</span>
                                     </div>
                                     <div class="flex justify-between">
-                                        <span class="text-gray-600">Acompte (50%)</span>
-                                        <span class="font-medium text-gray-900">{{ formatAmount(price * 0.5) }}</span>
+                                        <span class="text-gray-600">{{ paymentStage === 'first' ? 'Acompte (50%)' : 'Déjà payé' }}</span>
+                                        <span class="font-medium" :class="paymentStage === 'first' ? 'text-blue-600' : 'text-green-600'">
+                                            {{ formatAmount(paymentStage === 'first' ? price * 0.5 : price * 0.5) }}
+                                        </span>
                                     </div>
                                     <div class="flex justify-between text-sm">
                                         <span class="text-gray-500">Commission (8%)</span>
                                         <span class="text-gray-500">{{ formatAmount(commission) }}</span>
                                     </div>
                                     <div class="flex justify-between pt-2 border-t">
-                                        <span class="font-bold text-gray-900">Total à payer</span>
+                                        <span class="font-bold text-gray-900">
+                                            {{ paymentStage === 'first' ? 'À payer maintenant' : 'Solde restant' }}
+                                        </span>
                                         <span class="text-xl font-bold text-[#c10e46]">{{ formatAmount(amountToPay) }}</span>
                                     </div>
                                 </div>
                             </div>
 
                             <!-- Note sur le paiement -->
-                            <div class="bg-gray-50 rounded-lg p-3 text-sm text-gray-600">
+                            <div class="rounded-lg p-3 text-sm" :class="paymentStage === 'first' ? 'bg-blue-50 text-blue-800' : 'bg-green-50 text-green-800'">
                                 <p class="flex items-center">
-                                    <Wallet class="w-4 h-4 mr-2 text-[#c10e46]" />
+                                    <Wallet class="w-4 h-4 mr-2" />
                                     Débit direct de votre portefeuille
                                 </p>
                             </div>

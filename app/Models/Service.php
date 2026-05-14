@@ -44,4 +44,9 @@ class Service extends Model
     {
         return $this->hasMany(Service_detail::class);
     }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
 }

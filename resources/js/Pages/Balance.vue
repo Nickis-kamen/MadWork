@@ -490,7 +490,7 @@ const setFilter = (filter) => {
                             </p>
                         </div>
 
-                        <!-- Affichage pour les utilisateurs normaux -->
+                        <!-- Affichage pour les utilisateurs -->
                         <div v-else>
                             <p class="font-bold" :class="transaction.type === 'deposit' || transaction.type === 'sale' ? 'text-green-600' :
                                                         transaction.type === 'withdrawal' || transaction.type === 'purchase' ? 'text-red-600' :

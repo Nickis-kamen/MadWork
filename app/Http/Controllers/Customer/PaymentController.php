@@ -28,6 +28,8 @@ class PaymentController extends Controller
         $commission = $acompte * 0.08; // 8% de commission
         $amountToPay = $acompte + $commission;
         $remainingAmount = $price - $acompte;
+        $paymentStage = $transaction->payment_stage;
+
         return Inertia::render('Customer/Payment', [
             'agency' => $agency,
             'service' => $service,
@@ -37,7 +39,8 @@ class PaymentController extends Controller
             'price' => $price,
             'commission' => $commission,
             'amountToPay' => $amountToPay,
-            'remainingAmount' => $remainingAmount
+            'remainingAmount' => $remainingAmount,
+            'paymentStage' => $paymentStage
         ]);
     }
 
@@ -48,21 +51,40 @@ class PaymentController extends Controller
         $commission = $base * 0.08;
         // créer order
         $order = Order::create([
+            'reference' => 'CMD-' . uniqid(),
             'client_id' => $devis->user_id,
             'agency_id' => $devis->agency_id,
             'service_id' => $devis->service_id,
             'devis_id' => $devis->id,
             'amount' => $devis->price,
             'commission' => $commission,
-            'status' => 'in_progress'
+            'status' => 'pending',
+            'payment_status' => 'unpaid'
             ]);
 
         $user_agency = $devis->agency->user;
         $admin = User::where('role', 'admin')->first();
+        $balanceAgency = Balance::where('user_id', $user_agency->id);
+        $balanceAdmin = Balance::where('user_id', $admin->id);
 
         Balance::where('user_id', Auth::id())->decrement('amount', $transaction->amount);
-        Balance::where('user_id', $user_agency->id)->increment('amount', $base);
-        Balance::where('user_id', $admin->id)->increment('amount', $commission);
+
+        if (!$balanceAgency->exists()) {
+            Balance::create([
+                'user_id' => $user_agency->id,
+                'amount' => $base,
+            ]);
+        } else {
+            $balanceAgency->increment('amount', $base);
+        }
+        if (!$balanceAdmin->exists()) {
+            Balance::create([
+                'user_id' => $admin->id,
+                'amount' => $commission,
+            ]);
+        } else {
+            $balanceAdmin->increment('amount', $commission);
+        }
 
         $transaction->update([
             'order_id' => $order->id,
@@ -81,6 +103,64 @@ class PaymentController extends Controller
         $transaction_admin->update([
             'order_id' => $order->id,
             'status' => 'completed'
+        ]);
+
+        return redirect('/balance')->with([
+            'message' => 'Paiement effectué avec succès',
+            'type' => 'success', // ou 'error', 'warning', 'info'
+        ]);
+    }
+
+    public function payFinal(Transaction $transaction)
+    {
+        $devis = $transaction->devis;
+        $base = $devis->price * 0.5;
+        $commission = $base * 0.08;
+
+        $order = $transaction->order;
+    // dd($order);
+        $user_agency = $devis->agency->user;
+        $admin = User::where('role', 'admin')->first();
+        $balanceAgency = Balance::where('user_id', $user_agency->id);
+        $balanceAdmin = Balance::where('user_id', $admin->id);
+
+        Balance::where('user_id', Auth::id())->decrement('amount', $transaction->amount);
+
+        if (!$balanceAgency->exists()) {
+            Balance::create([
+                'user_id' => $user_agency->id,
+                'amount' => $base,
+            ]);
+        } else {
+            $balanceAgency->increment('amount', $base);
+        }
+        if (!$balanceAdmin->exists()) {
+            Balance::create([
+                'user_id' => $admin->id,
+                'amount' => $commission,
+            ]);
+        } else {
+            $balanceAdmin->increment('amount', $commission);
+        }
+
+        $transaction->update([
+            'status' => 'completed'
+        ]);
+
+        $transaction_agency = Transaction::where('user_id', $user_agency->id)->where('devis_id', $devis->id);
+
+        $transaction_agency->update([
+            'status' => 'completed'
+        ]);
+
+        $transaction_admin = Transaction::where('user_id', $admin->id)->where('devis_id', $devis->id);
+
+        $transaction_admin->update([
+            'status' => 'completed'
+        ]);
+
+        $order->update([
+            'payment_status' => 'paid'
         ]);
 
         return redirect('/balance')->with([

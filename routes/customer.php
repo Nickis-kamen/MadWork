@@ -1,6 +1,7 @@
 <?php
 use App\Http\Controllers\Customer\DashboardController;
 use App\Http\Controllers\Customer\DevisController;
+use App\Http\Controllers\Customer\OrderController;
 use App\Http\Controllers\Customer\PaymentController;
 use Illuminate\Support\Facades\Route;
 
@@ -17,4 +18,8 @@ Route::group(['middleware' => 'customer'],function()
 
     Route::get('payment/{transaction}', [PaymentController::class, 'index']) -> name('payment.index');
     Route::post('payment/{transaction}/first', [PaymentController::class, 'payFirst']) -> name('payment.first');
+    Route::post('payment/{transaction}/final', [PaymentController::class, 'payFinal']) -> name('payment.final');
+
+    Route::get('orders', [OrderController::class, 'index']) -> name('orders.index');
+    Route::post('orders/{order}/final-payment', [OrderController::class, 'finalPayment']) -> name('orders.final-payment');
 });
