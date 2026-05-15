@@ -24,6 +24,7 @@ class Transaction extends Model
         'amount',
         'order_id',
         'subscription_id',
+        'plan',
         'devis_id',
         'status',
         'description',

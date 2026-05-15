@@ -61,11 +61,19 @@ class PaymentController extends Controller
             'status' => 'pending',
             'payment_status' => 'unpaid'
             ]);
+        $balance = Auth::user()->balance ? Auth::user()->balance->amount : 0;
 
         $user_agency = $devis->agency->user;
         $admin = User::where('role', 'admin')->first();
         $balanceAgency = Balance::where('user_id', $user_agency->id);
         $balanceAdmin = Balance::where('user_id', $admin->id);
+
+        if ($balance < $transaction->amount) {
+            return redirect('/balance')->with([
+                'message' => 'Solde insuffisant pour effectuer le paiement. Veuillez recharger votre balance.',
+                'type' => 'error',
+            ]);
+        }
 
         Balance::where('user_id', Auth::id())->decrement('amount', $transaction->amount);
 
@@ -119,10 +127,19 @@ class PaymentController extends Controller
 
         $order = $transaction->order;
     // dd($order);
+        $balance = Auth::user()->balance ? Auth::user()->balance->amount : 0;
+
         $user_agency = $devis->agency->user;
         $admin = User::where('role', 'admin')->first();
         $balanceAgency = Balance::where('user_id', $user_agency->id);
         $balanceAdmin = Balance::where('user_id', $admin->id);
+
+        if ($balance < $transaction->amount) {
+            return redirect('/balance')->with([
+                'message' => 'Solde insuffisant pour effectuer le paiement. Veuillez recharger votre balance.',
+                'type' => 'error',
+            ]);
+        }
 
         Balance::where('user_id', Auth::id())->decrement('amount', $transaction->amount);
 

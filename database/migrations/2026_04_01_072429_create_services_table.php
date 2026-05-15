@@ -15,11 +15,11 @@ return new class extends Migration
             $table->id();
             $table->string('image');
             $table->string('title');
-            $table->string('slug')->unique;
+            $table->string('slug')->unique();
             $table->text('description');
             $table->float('price');
-            $table->foreignId('agency_id')->constrained('agencies')->onDelete('cascade');
-            $table->foreignId('category_id')->nullable()->constrained('categories')->onDelete('set null');
+            $table->foreignId('agency_id')->constrained('agencies')->cascadeOnDelete();
+            $table->foreignId('category_id')->nullable()->constrained('categories')->nullOnDelete();
             $table->timestamps();
         });
     }

@@ -11,9 +11,12 @@ class Subscription extends Model
     use HasFactory;
 
     protected $fillable = [
+        'reference',
         'agency_id',
         'plan',
         'amount',
+        'status',
+        'payment_status',
         'starts_at',
         'ends_at'
     ];

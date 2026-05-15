@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('devis', function (Blueprint $table) {
             $table->id();
             $table->string('reference')->unique();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->string('title');
-            $table->foreignId('service_id')->nullable()->constrained()->onDelete('set null');
-            $table->foreignId('agency_id')->nullable()->constrained('agencies')->onDelete('set null');
+            $table->foreignId('service_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('agency_id')->nullable()->constrained('agencies')->nullOnDelete();
             $table->integer('delai');
             $table->integer('delai_agency')->nullable();
             $table->text('description');

@@ -4,7 +4,9 @@ use App\Http\Controllers\Agency\AgencyController;
 use App\Http\Controllers\Agency\DashboardController;
 use App\Http\Controllers\Agency\DevisController;
 use App\Http\Controllers\Agency\OrderController;
+use App\Http\Controllers\Agency\PaymentController;
 use App\Http\Controllers\Agency\ServiceController;
+use App\Http\Controllers\Agency\SubscriptionController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -32,4 +34,9 @@ Route::group(['middleware' => 'agency', 'prefix' => 'agency', 'as' => 'agency.']
     Route::get('orders', [OrderController::class, 'index']) -> name('orders.index');
     Route::put('/orders/{id}/progress', [OrderController::class, 'updateProgress'])->name('orders.progress');
     Route::put('/orders/{id}/delivered', [OrderController::class, 'delivered'])->name('orders.delivered');
+
+    Route::post('/plan/{plan}', [SubscriptionController::class, 'plan']) -> name('plan.subscription');
+
+    Route::get('/payment/{transaction}', [PaymentController::class, 'index']) -> name('payments.index');
+    Route::post('/payment/{transaction}', [PaymentController::class, 'paySubscription']) -> name('payment.paySubscription');
 });
