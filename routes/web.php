@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AgencyController;
 use App\Http\Controllers\BalanceController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HomeController;
@@ -11,6 +12,7 @@ use Inertia\Inertia;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/services', [ServiceController::class, 'index'])->name('services.index');
 Route::get('/services/{service}', [ServiceController::class, 'show'])->name('services.show');
+Route::get('/agencies/{agency}', [AgencyController::class, 'show'])->name('agencies.show');
 
 Route::middleware('auth')->group(function () {
     Route::get('/balance', [BalanceController::class, 'index'])->name('balance.index');

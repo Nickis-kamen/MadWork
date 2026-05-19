@@ -97,7 +97,7 @@ class AgencyController extends Controller
         ]);
     }
 
-    private function generateUniqueSlug($name)
+    private function generateUniqueSlug(string $name)
     {
         $slug = Str::slug($name);
         $originalSlug = $slug;

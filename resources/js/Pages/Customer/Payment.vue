@@ -297,54 +297,6 @@ const getStageBadge = () => {
                             </p>
                         </div>
                     </div>
-
-                    <!-- Timeline des paiements -->
-                    <div class="bg-white rounded-xl shadow-sm border p-6">
-                        <h2 class="text-lg font-semibold text-gray-900 mb-4">Timeline des paiements</h2>
-                        <div class="relative">
-                            <!-- Ligne de progression -->
-                            <div class="absolute left-6 top-8 bottom-8 w-0.5 bg-gray-200"></div>
-
-                            <!-- Étape 1: Acompte -->
-                            <div class="relative flex items-start mb-8">
-                                <div class="flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center z-10"
-                                    :class="paymentStage === 'first' ? 'bg-blue-500' : 'bg-green-500'">
-                                    <TrendingUp class="w-6 h-6 text-white" />
-                                </div>
-                                <div class="ml-4 flex-1">
-                                    <div class="flex items-center justify-between">
-                                        <h3 class="font-semibold text-gray-900">Acompte (50%)</h3>
-                                        <span v-if="paymentStage === 'final'" class="text-green-600 text-sm flex items-center">
-                                            <CheckCircle class="w-4 h-4 mr-1" />
-                                            Payé
-                                        </span>
-                                        <span v-else class="text-blue-600 text-sm">À payer maintenant</span>
-                                    </div>
-                                    <p class="text-sm text-gray-600">{{ formatAmount(price * 0.5) }}</p>
-                                    <p class="text-xs text-gray-500 mt-1">Permet de démarrer le projet</p>
-                                </div>
-                            </div>
-
-                            <!-- Étape 2: Paiement final -->
-                            <div class="relative flex items-start">
-                                <div class="flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center z-10"
-                                    :class="paymentStage === 'final' ? 'bg-green-500' : 'bg-gray-300'">
-                                    <Truck class="w-6 h-6 text-white" />
-                                </div>
-                                <div class="ml-4 flex-1">
-                                    <div class="flex items-center justify-between">
-                                        <h3 class="font-semibold text-gray-900">Solde final (50%)</h3>
-                                        <span v-if="paymentStage === 'final'" class="text-green-600 text-sm flex items-center">
-                                            À payer maintenant
-                                        </span>
-                                        <span v-else class="text-gray-500 text-sm">À la livraison</span>
-                                    </div>
-                                    <p class="text-sm text-gray-600">{{ formatAmount(paymentStage === 'first' ? price * 0.5 : amountToPay) }}</p>
-                                    <p class="text-xs text-gray-500 mt-1">Permet la livraison finale du projet</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
 
                 <!-- Résumé de la commande -->

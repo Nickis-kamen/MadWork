@@ -14,6 +14,14 @@ const props = defineProps({
     }
 });
 
+const formatAmount = (amount) => {
+    return new Intl.NumberFormat('fr-MG', {
+        style: 'currency',
+        currency: 'MGA',
+        minimumFractionDigits: 0
+    }).format(amount);
+};
+
 </script>
 
 <template>
@@ -49,7 +57,7 @@ const props = defineProps({
                                 <!-- Description -->
                                 <div class="md:w-2/3 p-6">
                                     <h1 class="text-2xl font-bold mb-3" :style="{ color: '#1e002f' }">{{ service.title }}</h1>
-                                    <p class="text-[#1e002f] mb-4">A partir de <span class="text-2xl font-bold" :style="{ color: '#c10e46' }">{{ service.price }} Ar</span></p>
+                                    <p class="text-[#1e002f] mb-4">A partir de <span class="text-2xl font-bold" :style="{ color: '#c10e46' }">{{ formatAmount(service.price) }}</span></p>
                                     <p class="text-gray-700 leading-relaxed whitespace-pre-line">
                                         {{ service.description }}
                                     </p>
@@ -83,7 +91,7 @@ const props = defineProps({
                             <!-- Boutons -->
                             <div class="space-y-3">
                                 <Link
-                                    :href="`/agences/${service.agency.slug}`"
+                                    :href="`/agencies/${service.agency.slug}`"
                                     class="block w-full text-center px-4 py-3 rounded-lg border-2 font-medium transition-all hover:bg-gray-50"
                                     :style="{ borderColor: '#c10e4620', color: '#1e002f' }"
                                 >

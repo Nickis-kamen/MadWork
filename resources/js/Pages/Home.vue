@@ -9,6 +9,8 @@ import AgencyRegisterLink from '@/Components/AgencyRegisterLink.vue';
 import { computed } from 'vue';
 import Services from '@/Components/Services.vue';
 import Subscription from '@/Components/Subscription.vue';
+import Contact from '@/Components/Contact.vue';
+import Footer from '@/Components/Footer.vue';
 
 const props = defineProps({
     agencies: Array,
@@ -34,5 +36,7 @@ const isCustomer = computed(() => user.value?.role === 'customer')
     <Subscription />
     <Services :services="services" />
     <Agency :agencies="agencies" />
+    <Contact />
+    <Footer />
 </template>
 

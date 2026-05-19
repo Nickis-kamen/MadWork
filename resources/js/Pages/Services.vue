@@ -82,6 +82,14 @@ const changePage = (page) => {
     currentPage.value = page;
     applyFilters();
 };
+
+const formatAmount = (amount) => {
+    return new Intl.NumberFormat('fr-MG', {
+        style: 'currency',
+        currency: 'MGA',
+        minimumFractionDigits: 0
+    }).format(amount);
+};
 </script>
 
 <template>
@@ -207,7 +215,7 @@ const changePage = (page) => {
                             <div class="space-y-2 mb-4">
                                 <div v-if="service.price" class="flex items-center gap-2 text-bold text-gray-500">
                                     <Banknote class="text-yellow-500" />
-                                    À partir de <span class="text-black">{{ service.price }}</span> Ar
+                                    À partir de <span class="text-[#c10e46] font-bold">{{ formatAmount(service.price) }}</span>
                                 </div>
                             </div>
 
