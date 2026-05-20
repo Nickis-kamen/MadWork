@@ -15,6 +15,7 @@ import Footer from '@/Components/Footer.vue';
 const props = defineProps({
     agencies: Array,
     services: Array,
+    categories: Array,
 })
 
 const user = computed(() => usePage().props.auth.user)
@@ -27,7 +28,7 @@ const isCustomer = computed(() => user.value?.role === 'customer')
     <Nav />
     <Header />
     <div v-if="isCustomer">
-        <Post />
+        <Post :categories="categories" />
     </div>
     <div v-if="!user">
         <AgencyRegisterLink />

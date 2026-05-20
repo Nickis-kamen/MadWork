@@ -21,6 +21,7 @@ class Devis extends Model
         'title',
         'service_id',
         'agency_id',
+        'project_id',
         'delai',
         'delai_agency',
         'description',
@@ -49,5 +50,10 @@ class Devis extends Model
     public function transactions()
     {
         return $this->hasMany(Transaction::class);
+    }
+
+    public function project()
+    {
+        return $this->belongsTo(Project::class);
     }
 }

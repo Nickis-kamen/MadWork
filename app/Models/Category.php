@@ -29,4 +29,9 @@ class Category extends Model
     {
         return $this->hasMany(Service::class);
     }
+
+    public function projects()
+    {
+        return $this->hasMany(Project::class);
+    }
 }

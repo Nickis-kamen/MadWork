@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('title');
             $table->foreignId('service_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('agency_id')->nullable()->constrained('agencies')->nullOnDelete();
+            $table->foreignId('project_id')->nullable()->constrained('projects')->nullOnDelete();
             $table->integer('delai');
             $table->integer('delai_agency')->nullable();
             $table->text('description');

@@ -4,6 +4,7 @@ use App\Http\Controllers\AgencyController;
 use App\Http\Controllers\BalanceController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ServiceController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -13,6 +14,7 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/services', [ServiceController::class, 'index'])->name('services.index');
 Route::get('/services/{service}', [ServiceController::class, 'show'])->name('services.show');
 Route::get('/agencies/{agency}', [AgencyController::class, 'show'])->name('agencies.show');
+Route::get('/projects', [ProjectController::class, 'index'])->name('projects.index');
 
 Route::middleware('auth')->group(function () {
     Route::get('/balance', [BalanceController::class, 'index'])->name('balance.index');

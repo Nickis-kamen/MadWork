@@ -3,6 +3,7 @@ use App\Http\Controllers\Customer\DashboardController;
 use App\Http\Controllers\Customer\DevisController;
 use App\Http\Controllers\Customer\OrderController;
 use App\Http\Controllers\Customer\PaymentController;
+use App\Http\Controllers\Customer\ProjectController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -22,4 +23,10 @@ Route::group(['middleware' => 'customer'],function()
 
     Route::get('orders', [OrderController::class, 'index']) -> name('orders.index');
     Route::post('orders/{order}/final-payment', [OrderController::class, 'finalPayment']) -> name('orders.final-payment');
+
+    Route::get('customer/projects', [ProjectController::class, 'index']) -> name('customer.projects.index');
+    Route::post('customer/project', [ProjectController::class, 'store']) -> name('customer.project.store');
+    Route::get('customer/project/{project}/edit', [ProjectController::class, 'edit']) -> name('customer.project.edit');
+    Route::put('customer/project/{project}', [ProjectController::class, 'update']) -> name('customer.project.update');
+    Route::patch('customer/project/{project}/close', [ProjectController::class, 'closed']) -> name('customer.project.closed');
 });

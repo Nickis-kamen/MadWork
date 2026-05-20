@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Agency;
+use App\Models\Category;
 use App\Models\Service;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -14,9 +15,11 @@ class HomeController extends Controller
     {
         $services = Service::with('agency','category')->limit(3)->latest()->get();
         $agencies = Agency::limit(3)->get();
+        $categories = Category::all();
         return Inertia::render('Home', [
             'agencies' => $agencies,
-            'services' => $services
+            'services' => $services,
+            'categories' => $categories
         ]);
     }
 }

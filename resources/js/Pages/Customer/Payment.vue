@@ -3,17 +3,14 @@ import { Head, router } from '@inertiajs/vue3';
 import { ref, computed } from 'vue';
 import Nav from '@/Components/Nav.vue';
 import {
-  CreditCard,
   Wallet,
   CheckCircle,
   AlertCircle,
   ArrowLeft,
   Lock,
   FileText,
-  Percent,
   TrendingUp,
   ArrowRight,
-  Package,
   Truck
 } from 'lucide-vue-next';
 
