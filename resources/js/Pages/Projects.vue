@@ -83,28 +83,20 @@ const formatAmount = (amount) => {
     }).format(amount);
 };
 
-// Formater la date
+// Fonction pour formater la date
 const formatDate = (dateString) => {
-    if (!dateString) return 'Date inconnue';
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffTime = Math.abs(now - date);
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-    if (diffDays === 1) return 'Hier';
-    if (diffDays < 7) return `Il y a ${diffDays} jours`;
-    return date.toLocaleDateString('fr-FR', {
+    if (!dateString) return 'Non défini';
+    return new Date(dateString).toLocaleDateString('fr-FR', {
         day: '2-digit',
         month: '2-digit',
         year: 'numeric'
     });
 };
-
 // Statut du projet
 const getStatusBadge = (status) => {
     const statusMap = {
-        'active': { label: 'Ouvert', class: 'bg-green-100 text-green-700' },
-        'in_progress': { label: 'En cours', class: 'bg-blue-100 text-blue-700' },
+        'open': { label: 'Ouvert', class: 'bg-green-100 text-green-700' },
+        'assigned': { label: 'Attribué', class: 'bg-blue-100 text-blue-700' },
         'closed': { label: 'Fermé', class: 'bg-gray-100 text-gray-700' }
     };
     return statusMap[status] || { label: status, class: 'bg-gray-100 text-gray-700' };
@@ -177,7 +169,7 @@ const getStatusBadge = (status) => {
                 <div v-for="project in projects.data" :key="project.id"
                     class="group bg-white rounded-xl border hover:shadow-xl transition-all duration-300 overflow-hidden"
                     :style="{ borderColor: '#c10e4620' }">
-                    <Link :href="`/projects/${project.id}`" class="block">
+                    <Link :href="`/project/${project.id}`" class="block">
                         <!-- En-tête de la carte -->
                         <div class="p-4 border-b" :style="{ borderColor: '#c10e4620', background: 'linear-gradient(135deg, #c10e4605 0%, #1e002f05 100%)' }">
                             <div class="flex items-start justify-between mb-2">

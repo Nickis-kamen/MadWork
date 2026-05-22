@@ -33,7 +33,7 @@ const submit = () => {
         formData.append('cdc_file', form.cdc_file);
     }
 
-    form.post(route('project.store'), {
+    form.post(route('customer.project.store'), {
         data: formData,
         headers: {
             'Content-Type': 'multipart/form-data',

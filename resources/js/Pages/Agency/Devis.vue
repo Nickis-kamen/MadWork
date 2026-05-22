@@ -156,7 +156,7 @@ const hasProposal = (devi) => devi.price_agency || devi.delai_agency || devi.des
                                 </div>
                                 <div>
                                     <p class="font-semibold text-sm" :style="{ color: '#1e002f' }">{{ devi.title }}</p>
-                                    <p class="text-xs text-gray-500">{{ devi.service.title }}</p>
+                                    <p class="text-xs text-gray-500">{{ devi.service?.title || '-' }}</p>
                                 </div>
                             </div>
                             <span class="px-2 py-1 rounded-full text-xs font-medium inline-flex items-center" :class="getStatusInfo(devi.status).bg">
@@ -232,7 +232,7 @@ const hasProposal = (devi) => devi.price_agency || devi.delai_agency || devi.des
                                 <td class="px-6 py-4 text-sm font-mono">{{ devi.reference }}</td>
                                 <td class="px-6 py-4">
                                     <p class="text-sm font-medium">{{ devi.user.name || 'N/A' }}</p>
-                                    <p class="text-xs text-gray-500">{{ devi.service.title }} - {{ devi.title }}</p>
+                                    <p class="text-xs text-gray-500">{{ devi.service?.title || '-' }} - {{ devi.title }}</p>
                                 </td>
                                 <td class="px-6 py-4 text-sm">{{ formatDate(devi.created_at) }}</td>
                                 <td class="px-6 py-4 text-sm">{{ devi.delai }} jours</td>
@@ -283,7 +283,7 @@ const hasProposal = (devi) => devi.price_agency || devi.delai_agency || devi.des
                             </div>
                             <div>
                                 <h3 class="text-xl font-bold" :style="{ color: '#1e002f' }">{{ selectedDevi.title }}</h3>
-                                <p class="text-sm text-gray-500">#{{ selectedDevi.reference }} • Service: {{ selectedDevi.service.title }} • Client: {{ selectedDevi.user?.name || 'N/A' }}</p>
+                                <p class="text-sm text-gray-500">#{{ selectedDevi.reference }} • Service: {{ selectedDevi.service?.title || '-' }} • Client: {{ selectedDevi.user?.name || 'N/A' }}</p>
                             </div>
                         </div>
                         <button @click="closeModal" class="p-2 rounded-lg hover:bg-gray-100 transition-colors">

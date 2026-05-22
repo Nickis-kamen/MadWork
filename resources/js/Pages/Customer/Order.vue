@@ -145,7 +145,7 @@ const getProgressColor = (status) => {
                             </div>
                             <div>
                                 <p class="font-semibold text-sm" :style="{ color: '#1e002f' }">{{ order.reference }}</p>
-                                <p class="text-xs text-gray-500">{{ order.service?.title || 'Service' }}</p>
+                                <p class="text-xs text-gray-500">{{ order.service?.title || '-' }}</p>
                             </div>
                         </div>
                         <span
@@ -223,7 +223,8 @@ const getProgressColor = (status) => {
                 <table class="min-w-full divide-y" :style="{ borderColor: '#c10e4620' }">
                     <thead class="bg-gray-50">
                         <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Commande</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">REF</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Titre / date</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Service / Agence</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Montant</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Progression</th>
@@ -238,8 +239,12 @@ const getProgressColor = (status) => {
                                 <p class="text-sm font-mono font-semibold" :style="{ color: '#1e002f' }">{{ order.reference }}</p>
                                 <p class="text-xs text-gray-500">{{ formatDate(order.created_at) }}</p>
                             </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <p class="text-sm" :style="{ color: '#1e002f' }">{{ order.devis?.title || '-' }}</p>
+                                <p class="text-xs text-gray-500">{{ formatDate(order.created_at) }}</p>
+                            </td>
                             <td class="px-6 py-4">
-                                <p class="text-sm font-medium" :style="{ color: '#1e002f' }">{{ order.service?.title || 'Service' }}</p>
+                                <p class="text-sm font-medium" :style="{ color: '#1e002f' }">{{ order.service?.title || '-' }}</p>
                                 <Link :href="`/agencies/${order.agency?.slug}`" class="text-xs text-blue-600">
                                     {{ order.agency?.name || 'N/A' }}
                                 </Link>

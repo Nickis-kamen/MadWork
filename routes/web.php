@@ -15,6 +15,7 @@ Route::get('/services', [ServiceController::class, 'index'])->name('services.ind
 Route::get('/services/{service}', [ServiceController::class, 'show'])->name('services.show');
 Route::get('/agencies/{agency}', [AgencyController::class, 'show'])->name('agencies.show');
 Route::get('/projects', [ProjectController::class, 'index'])->name('projects.index');
+Route::get('/project/{project}', [ProjectController::class, 'show'])->name('projects.show');
 
 Route::middleware('auth')->group(function () {
     Route::get('/balance', [BalanceController::class, 'index'])->name('balance.index');

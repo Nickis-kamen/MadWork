@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Devis;
 use App\Models\Project;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class ProjectController extends Controller
@@ -37,6 +39,23 @@ class ProjectController extends Controller
             'projects' => $projects,
             'categories' => $categories,
             'filters' => $request->only(['search', 'category_id'])
+        ]);
+    }
+
+    public function show(Project $project)
+    {
+        $project->load('user', 'category');
+
+        // Vérifier si l'agence a déjà proposé un devis pour ce projet
+        $existingQuotation = null;
+        if (Auth::check() && Auth::user()->role === 'agency') {
+            $existingQuotation = Devis::where('project_id', $project->id)
+                ->where('agency_id', Auth::user()->agency->id)
+                ->first();
+        }
+        return Inertia::render('ProjectShow', [
+            'project' => $project,
+            'existingQuotation' => $existingQuotation
         ]);
     }
 }

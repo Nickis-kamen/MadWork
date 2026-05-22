@@ -110,7 +110,6 @@ const formatAmount = (amount) => {
                             </div>
                             <div>
                                 <p class="font-semibold text-sm" :style="{ color: '#1e002f' }">{{ devi.title }}</p>
-                                <p class="text-xs text-gray-500">{{ devi.service_type }}</p>
                             </div>
                         </div>
                         <span
@@ -165,14 +164,6 @@ const formatAmount = (amount) => {
                             <Download class="w-4 h-4" :style="{ color: '#c10e46' }" />
                             <span class="ml-2 text-sm" :style="{ color: '#c10e46' }">PDF</span>
                         </a>
-                        <Link
-                            v-if="devi.status === 'proposed'"
-                            :href="`/devis/${devi.id}/reponse`"
-                            class="px-3 py-2 text-xs rounded-lg border hover:bg-gray-50 transition-colors inline-flex items-center"
-                            :style="{ borderColor: '#c10e4620', color: '#c10e46' }"
-                        >
-                            Répondre
-                        </Link>
                     </div>
                 </div>
 
@@ -219,7 +210,7 @@ const formatAmount = (amount) => {
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <p class="text-sm font-medium" :style="{ color: '#1e002f' }">{{ devi.title }}</p>
-                                <p class="text-xs text-gray-500">{{ devi.service.title }}</p>
+                                <p class="text-xs text-gray-500">{{ devi.service?.title || '-' }}</p>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-blue-600">
                                 <Link :href="`/agencies/${devi.agency.slug}`">{{ devi.agency.name }}</Link>
@@ -313,7 +304,7 @@ const formatAmount = (amount) => {
                         </div>
                         <div>
                             <h3 class="text-xl font-bold" :style="{ color: '#1e002f' }">{{ selectedDevi.title }}</h3>
-                            <p class="text-sm text-gray-500">Devis #{{ selectedDevi.reference }} • {{ selectedDevi.service.title }}</p>
+                            <p class="text-sm text-gray-500">Devis #{{ selectedDevi.reference }} • {{ selectedDevi.service?.title || '-' }}</p>
                         </div>
                     </div>
                     <button

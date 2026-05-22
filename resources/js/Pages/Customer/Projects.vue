@@ -92,8 +92,10 @@ const truncateText = (text, length = 100) => {
 const getStatusBadge = (status) => {
     if (status === 'closed') {
         return { label: 'Fermé', class: 'bg-gray-100 text-gray-600', icon: XCircle };
+    }else if (status === 'assigned') {
+        return { label: 'Attribué', class: 'bg-blue-100 text-blue-600', icon: CheckCircle };
     }
-    return { label: 'Actif', class: 'bg-green-100 text-green-600', icon: CheckCircle };
+    return { label: 'Ouvert', class: 'bg-green-100 text-green-600', icon: CheckCircle };
 };
 </script>
 
