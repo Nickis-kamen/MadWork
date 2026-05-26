@@ -11,32 +11,37 @@ import Services from '@/Components/Services.vue';
 import Subscription from '@/Components/Subscription.vue';
 import Contact from '@/Components/Contact.vue';
 import Footer from '@/Components/Footer.vue';
+import Project from '@/Components/Project.vue';
 
 const props = defineProps({
     agencies: Array,
     services: Array,
     categories: Array,
+    projects: Array,
 })
 
 const user = computed(() => usePage().props.auth.user)
 
 const isCustomer = computed(() => user.value?.role === 'customer')
-
+const isAgency = computed(() => user.value?.role === 'agency')
 </script>
 <template>
     <Head title="Accueil" />
     <Nav />
     <Header />
-    <div v-if="isCustomer">
-        <Post :categories="categories" />
+    <About />
+    <Subscription />
+    <Project :projects="projects" />
+    <Services :services="services" />
+    <div v-if="!user || isCustomer">
+        <Agency :agencies="agencies" />
     </div>
     <div v-if="!user">
         <AgencyRegisterLink />
     </div>
-    <About />
-    <Subscription />
-    <Services :services="services" />
-    <Agency :agencies="agencies" />
+    <div v-if="isCustomer">
+        <Post :categories="categories" />
+    </div>
     <Contact />
     <Footer />
 </template>

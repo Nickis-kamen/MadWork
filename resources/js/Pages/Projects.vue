@@ -164,7 +164,7 @@ const getStatusBadge = (status) => {
                 </div>
             </div>
 
-            <!-- Grille des projets (style carte comme avant) -->
+            <!-- Grille des projets -->
             <div v-if="projects.data && projects.data.length > 0" class="grid lg:grid-cols-3 md:grid-cols-2 gap-8">
                 <div v-for="project in projects.data" :key="project.id"
                     class="group bg-white rounded-xl border hover:shadow-xl transition-all duration-300 overflow-hidden"

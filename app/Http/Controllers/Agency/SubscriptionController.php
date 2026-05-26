@@ -3,14 +3,26 @@
 namespace App\Http\Controllers\Agency;
 
 use App\Http\Controllers\Controller;
+use App\Models\Subscription;
 use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 
 class SubscriptionController extends Controller
 {
     //
+    public function index()
+    {
+        $user = Auth::user();
+        $subscriptions = Subscription::where('agency_id', $user->id)->latest()->get();
+
+        return Inertia::render('Agency/Subscription', [
+            'subscriptions' => $subscriptions
+        ]);
+    }
+
     public function plan(string $plan)
     {
         if(!in_array($plan, ['basic', 'pro', 'premium'])) {

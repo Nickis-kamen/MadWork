@@ -10,7 +10,8 @@ import {
   LogOut,
   Menu,
   Building2,
-  ChartColumnStacked
+  ChartColumnStacked,
+  BanknoteArrowUp
 } from 'lucide-vue-next';
 import ApplicationLogoMini from '../ApplicationLogoMini.vue';
 
@@ -66,20 +67,6 @@ if(isAdmin.value){
             badge: 0
         },
         {
-            id: 'requests',
-            name: 'Demandes Devis',
-            href: '/admin/requests',
-            icon: FileText,
-            badge: 3
-        },
-        {
-            id: 'projects',
-            name: 'Projets Actifs',
-            href: '/admin/projects',
-            icon: Folder,
-            badge: 0
-        },
-        {
             id: 'staff',
             name: 'Équipe',
             href: '/admin/staff',
@@ -93,34 +80,29 @@ if(isAdmin.value){
             icon: UserCircle,
             badge: 0
         },
-    ];
-
-}
-
-if(isCustomer.value){
-    menuItems = [
         {
-            id: 'dashboard',
-            name: 'Tableau de bord',
-            href: '/customer/dashboard',
-            icon: LayoutDashboard,
+            id: 'subscriptions',
+            name: 'Abonnements',
+            href: '/admin/subscriptions',
+            icon: BanknoteArrowUp,
             badge: 0
         },
         {
-            id: 'devis',
-            name: 'Mes Devis',
-            href: '/customer/devis',
+            id: 'requests',
+            name: 'Demandes Devis',
+            href: '/admin/requests',
             icon: FileText,
             badge: 3
         },
         {
             id: 'projects',
             name: 'Projets Actifs',
-            href: '/customer/projects',
+            href: '/admin/projects',
             icon: Folder,
             badge: 0
         },
     ];
+
 }
 
 if(isAgency.value){
@@ -130,6 +112,13 @@ if(isAgency.value){
             name: 'Tableau de bord',
             href: '/agency/dashboard',
             icon: LayoutDashboard,
+            badge: 0
+        },
+        {
+            id: 'subscriptions',
+            name: 'Abonnements',
+            href: '/agency/subscriptions',
+            icon: BanknoteArrowUp,
             badge: 0
         },
         {

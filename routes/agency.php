@@ -37,6 +37,7 @@ Route::group(['middleware' => 'agency', 'prefix' => 'agency', 'as' => 'agency.']
     Route::put('/orders/{id}/delivered', [OrderController::class, 'delivered'])->name('orders.delivered');
 
     Route::post('/plan/{plan}', [SubscriptionController::class, 'plan']) -> name('plan.subscription');
+    Route::get('/subscriptions', [SubscriptionController::class, 'index']) -> name('subscriptions.index');
 
     Route::get('/payment/{transaction}', [PaymentController::class, 'index']) -> name('payments.index');
     Route::post('/payment/{transaction}', [PaymentController::class, 'paySubscription']) -> name('payment.paySubscription');

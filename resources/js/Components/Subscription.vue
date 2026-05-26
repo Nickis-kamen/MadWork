@@ -109,7 +109,7 @@ const getPlanBorderClass = (plan) => {
 </script>
 
 <template>
-    <section class="relative py-20 bg-gradient-to-br from-gray-50 to-gray-100 overflow-hidden">
+    <section id="subscription" class="relative py-20 bg-gradient-to-br from-gray-50 to-gray-100 overflow-hidden">
 
         <div class="relative container mx-auto px-4">
             <!-- En-tête -->
