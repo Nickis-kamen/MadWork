@@ -48,40 +48,6 @@ const closeModal = () => {
     selectedSubscription.value = null;
 };
 
-// Annuler un abonnement
-const cancelSubscription = () => {
-    if (confirm('Êtes-vous sûr de vouloir annuler cet abonnement ?')) {
-        router.put(`/agency/subscriptions/${selectedSubscription.value.reference}/cancel`, {}, {
-            onSuccess: () => {
-                selectedSubscription.value.status = 'cancelled';
-                const index = subscriptions.value.findIndex(s => s.reference === selectedSubscription.value.reference);
-                if (index !== -1) {
-                    subscriptions.value[index] = { ...selectedSubscription.value };
-                }
-                closeModal();
-                window.location.reload();
-            },
-            onError: (errors) => {
-                console.error('Erreur:', errors);
-            }
-        });
-    }
-};
-
-// Renouveler un abonnement
-const renewSubscription = () => {
-    if (confirm('Voulez-vous renouveler cet abonnement ?')) {
-        router.post(`/agency/subscriptions/${selectedSubscription.value.reference}/renew`, {}, {
-            onSuccess: () => {
-                window.location.reload();
-            },
-            onError: (errors) => {
-                console.error('Erreur:', errors);
-            }
-        });
-    }
-};
-
 // Obtenir les infos du plan
 const getPlanInfo = (plan) => {
     const planMap = {
@@ -97,7 +63,8 @@ const getStatusInfo = (status) => {
     const statusMap = {
         'pending': { label: 'En attente', icon: Clock, color: 'text-yellow-600', bg: 'bg-yellow-100' },
         'active': { label: 'Actif', icon: CheckCircle, color: 'text-green-600', bg: 'bg-green-100' },
-        'cancelled': { label: 'Annulé', icon: XCircle, color: 'text-red-600', bg: 'bg-red-100' }
+        'cancelled': { label: 'Annulé', icon: XCircle, color: 'text-red-600', bg: 'bg-red-100' },
+        'finished': { label: 'Terminé', icon: XCircle, color: 'text-red-600', bg: 'bg-red-100' }
     };
     return statusMap[status] || { label: status, icon: AlertCircle, color: 'text-gray-600', bg: 'bg-gray-100' };
 };
@@ -121,8 +88,6 @@ const getPaymentInfo = (paymentStatus) => {
     return paymentMap[paymentStatus] || { label: paymentStatus, icon: Wallet, color: 'text-gray-600', bg: 'bg-gray-100' };
 };
 
-const isActive = (status) => status === 'active';
-const isPending = (status) => status === 'pending';
 </script>
 
 <template>
@@ -139,7 +104,7 @@ const isPending = (status) => status === 'pending';
                         Consultez et gérez vos abonnements
                     </p>
                 </div>
-                <Link href="/#subscription" class="px-4 py-2 rounded-xl font-semibold text-white flex items-center gap-2 transition-all hover:opacity-90" :style="{ background: 'linear-gradient(135deg, #c10e46 0%, #1e002f 100%)' }">
+                <Link href="/agency/subscription" class="px-4 py-2 rounded-xl font-semibold text-white flex items-center gap-2 transition-all hover:opacity-90" :style="{ background: 'linear-gradient(135deg, #c10e46 0%, #1e002f 100%)' }">
                     <Plus class="w-4 h-4" />
                     Nouvel abonnement
                 </Link>
@@ -255,7 +220,7 @@ const isPending = (status) => status === 'pending';
             </div>
         </div>
 
-        <!-- Modal Détails Abonnement simplifié -->
+        <!-- Modal Détails Abonnement -->
         <div v-if="showModal && selectedSubscription" class="fixed inset-0 z-50">
             <div class="fixed inset-0 bg-black bg-opacity-50 transition-opacity" @click="closeModal"></div>
             <div class="flex items-center justify-center min-h-screen p-4">
@@ -314,17 +279,7 @@ const isPending = (status) => status === 'pending';
                             </div>
                         </div>
 
-                        <!-- Actions -->
-                        <div class="border-t pt-4 flex flex-wrap gap-3" :style="{ borderColor: '#c10e4620' }">
-                            <button v-if="isActive(selectedSubscription.status)" @click="renewSubscription" class="flex-1 px-4 py-2 rounded-lg text-white font-medium flex items-center justify-center space-x-2 transition-all hover:opacity-90" :style="{ background: 'linear-gradient(135deg, #c10e46 0%, #1e002f 100%)' }">
-                                <RefreshCw class="w-4 h-4" />
-                                <span>Renouveler</span>
-                            </button>
-                            <button v-if="isActive(selectedSubscription.status) || isPending(selectedSubscription.status)" @click="cancelSubscription" class="flex-1 px-4 py-2 rounded-lg border flex items-center justify-center space-x-2 transition-all hover:bg-red-50" :style="{ borderColor: '#dc2626', color: '#dc2626' }">
-                                <Ban class="w-4 h-4" />
-                                <span>Annuler</span>
-                            </button>
-                        </div>
+
 
                         <!-- Message simple -->
                         <div v-if="selectedSubscription.status === 'pending'" class="bg-blue-50 p-3 rounded-lg text-center">

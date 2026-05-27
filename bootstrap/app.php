@@ -4,6 +4,8 @@ use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\AgencyMiddleware;
 use App\Http\Middleware\CustomerMiddleware;
 use App\Http\Middleware\HandleInertiaRequests;
+use App\Http\Middleware\NoSubscriptionMiddleware;
+use App\Http\Middleware\SubscriptionMiddleware;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -23,6 +25,8 @@ return Application::configure(basePath: dirname(__DIR__))
             'admin' => AdminMiddleware::class,
             'customer' => CustomerMiddleware::class,
             'agency' => AgencyMiddleware::class,
+            'subscription' => SubscriptionMiddleware::class,
+            'no-subscription' => NoSubscriptionMiddleware::class,
         ]);
         $middleware->web(append: [
             HandleInertiaRequests::class,

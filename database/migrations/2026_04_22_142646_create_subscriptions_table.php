@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('agency_id')->constrained('users')->cascadeOnDelete();
             $table->enum('plan', ['basic', 'premium', 'pro']);
             $table->float('amount');
-            $table->enum('status', ['pending', 'active', 'cancelled'])->default('pending');
+            $table->enum('status', ['pending', 'active', 'finished', 'cancelled'])->default('pending');
             $table->enum('payment_status', ['unpaid', 'paid'])->default('unpaid');
             $table->date('starts_at')->nullable();
             $table->date('ends_at')->nullable();

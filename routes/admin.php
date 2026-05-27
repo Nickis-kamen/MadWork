@@ -22,4 +22,5 @@ Route::group(['middleware' => 'admin', 'prefix' => 'admin', 'as' => 'admin.'],fu
     Route::delete('categories/{category}', [CategoryController::class, 'destroy']) -> name('categories.destroy');
 
     Route::get('subscriptions', [SubscriptionController::class, 'index']) -> name('subscriptions');
+    Route::put('subscriptions/{subscription}/active', [SubscriptionController::class, 'active']) -> name('subscriptions.active');
 });

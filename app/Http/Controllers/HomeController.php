@@ -14,8 +14,22 @@ class HomeController extends Controller
     //
     public function index()
     {
-        $services = Service::with('agency','category')->limit(3)->latest()->get();
-        $agencies = Agency::limit(3)->get();
+        // Fetch services with active subscriptions
+        $services = Service::with(['agency', 'category'])
+            ->whereHas('agency.user.subscriptions', function ($query) {
+                $query->where('status', 'active')
+                    ->where('ends_at', '>', now());
+            })
+            ->limit(3)
+            ->latest()
+            ->get();
+
+        // Fetch agencies with active subscriptions
+        $agencies = Agency::whereHas('user.subscriptions', function ($query) {
+            $query->where('status', 'active')
+                ->where('ends_at', '>', now());
+        })->limit(3)->get();
+
         $categories = Category::all();
         $projects = Project::with('user', 'category')->limit(3)->latest()->get();
 

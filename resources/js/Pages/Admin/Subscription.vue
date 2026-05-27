@@ -76,15 +76,9 @@ const filteredSubscriptions = computed(() => {
 
 // Statistiques
 const stats = computed(() => {
-    const total = subscriptions.value.length;
     const pending = subscriptions.value.filter(s => s.status === 'pending').length;
-    const active = subscriptions.value.filter(s => s.status === 'active').length;
-    const cancelled = subscriptions.value.filter(s => s.status === 'cancelled').length;
-    const totalRevenue = subscriptions.value
-        .filter(s => s.status === 'active')
-        .reduce((sum, s) => sum + s.amount, 0);
 
-    return { total, pending, active, cancelled, totalRevenue };
+    return { pending };
 });
 
 // Ouvrir les détails
@@ -99,10 +93,9 @@ const closeModal = () => {
     selectedSubscription.value = null;
 };
 
-// Valider un abonnement (change seulement le status, pas payment_status)
 const validateSubscription = () => {
     if (confirm('Valider cet abonnement ?')) {
-        router.put(`/admin/subscriptions/${selectedSubscription.value.reference}/validate`, {}, {
+        router.put(`/admin/subscriptions/${selectedSubscription.value.reference}/active`, {}, {
             onSuccess: () => {
                 selectedSubscription.value.status = 'active';
                 const index = subscriptions.value.findIndex(s => s.reference === selectedSubscription.value.reference);
@@ -124,26 +117,6 @@ const rejectSubscription = () => {
     const reason = prompt('Motif du refus :');
     if (reason) {
         router.put(`/admin/subscriptions/${selectedSubscription.value.reference}/reject`, { reason }, {
-            onSuccess: () => {
-                selectedSubscription.value.status = 'cancelled';
-                const index = subscriptions.value.findIndex(s => s.reference === selectedSubscription.value.reference);
-                if (index !== -1) {
-                    subscriptions.value[index] = { ...selectedSubscription.value };
-                }
-                closeModal();
-                window.location.reload();
-            },
-            onError: (errors) => {
-                console.error('Erreur:', errors);
-            }
-        });
-    }
-};
-
-// Annuler un abonnement actif
-const cancelSubscription = () => {
-    if (confirm('Êtes-vous sûr de vouloir annuler cet abonnement ?')) {
-        router.put(`/admin/subscriptions/${selectedSubscription.value.reference}/cancel`, {}, {
             onSuccess: () => {
                 selectedSubscription.value.status = 'cancelled';
                 const index = subscriptions.value.findIndex(s => s.reference === selectedSubscription.value.reference);
@@ -190,7 +163,8 @@ const getStatusInfo = (status) => {
     const statusMap = {
         'pending': { label: 'En attente', icon: Clock, color: 'text-yellow-600', bg: 'bg-yellow-100', action: 'validation' },
         'active': { label: 'Actif', icon: CheckCircle, color: 'text-green-600', bg: 'bg-green-100', action: 'cancel' },
-        'cancelled': { label: 'Annulé', icon: XCircle, color: 'text-red-600', bg: 'bg-red-100', action: 'none' }
+        'cancelled': { label: 'Annulé', icon: XCircle, color: 'text-red-600', bg: 'bg-red-100', action: 'none' },
+        'finished': { label: 'Terminé', icon: XCircle, color: 'text-red-600', bg: 'bg-red-100' }
     };
     return statusMap[status] || { label: status, icon: AlertCircle, color: 'text-gray-600', bg: 'bg-gray-100', action: 'none' };
 };
@@ -225,8 +199,7 @@ const formatDateTime = (dateString) => {
     });
 };
 
-const isPending = (status) => status === 'pending';
-const isActive = (status) => status === 'active';
+const isPending = (status,payment_status)  => status === 'pending' && payment_status === 'paid';
 </script>
 
 <template>
@@ -250,54 +223,6 @@ const isActive = (status) => status === 'active';
                     <button @click="() => window.location.reload()" class="px-4 py-2 rounded-xl bg-gray-200 hover:bg-gray-300 transition-colors">
                         <RefreshCw class="w-4 h-4" />
                     </button>
-                </div>
-            </div>
-
-            <!-- Statistiques -->
-            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-xs text-gray-500 uppercase font-semibold">Total</p>
-                            <p class="text-2xl font-bold text-gray-800">{{ stats.total }}</p>
-                        </div>
-                        <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
-                            <CreditCard class="w-5 h-5 text-blue-600" />
-                        </div>
-                    </div>
-                </div>
-                <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-xs text-gray-500 uppercase font-semibold">En attente</p>
-                            <p class="text-2xl font-bold text-yellow-600">{{ stats.pending }}</p>
-                        </div>
-                        <div class="w-10 h-10 rounded-full bg-yellow-100 flex items-center justify-center">
-                            <Clock class="w-5 h-5 text-yellow-600" />
-                        </div>
-                    </div>
-                </div>
-                <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-xs text-gray-500 uppercase font-semibold">Actifs</p>
-                            <p class="text-2xl font-bold text-green-600">{{ stats.active }}</p>
-                        </div>
-                        <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
-                            <CheckCircle class="w-5 h-5 text-green-600" />
-                        </div>
-                    </div>
-                </div>
-                <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-xs text-gray-500 uppercase font-semibold">CA (actifs)</p>
-                            <p class="text-2xl font-bold text-purple-600">{{ stats.totalRevenue.toLocaleString() }} Ar</p>
-                        </div>
-                        <div class="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center">
-                            <TrendingUp class="w-5 h-5 text-purple-600" />
-                        </div>
-                    </div>
                 </div>
             </div>
 
@@ -556,10 +481,10 @@ const isActive = (status) => status === 'active';
                             </div>
                         </div>
 
-                        <!-- Actions admin (modifie seulement le status, pas payment_status) -->
+                        <!-- Actions admin -->
                         <div class="border-t pt-4 flex flex-wrap gap-3">
                             <button
-                                v-if="isPending(selectedSubscription.status)"
+                                v-if="isPending(selectedSubscription.status,selectedSubscription.payment_status)"
                                 @click="validateSubscription"
                                 class="flex-1 px-4 py-2 rounded-lg text-white font-medium flex items-center justify-center gap-2 transition-all hover:opacity-90 bg-gradient-to-r from-green-500 to-green-600"
                             >
@@ -567,20 +492,12 @@ const isActive = (status) => status === 'active';
                                 Valider l'abonnement
                             </button>
                             <button
-                                v-if="isPending(selectedSubscription.status)"
+                                v-if="isPending(selectedSubscription.status,selectedSubscription.payment_status)"
                                 @click="rejectSubscription"
                                 class="flex-1 px-4 py-2 rounded-lg border border-red-500 text-red-600 font-medium flex items-center justify-center gap-2 transition-all hover:bg-red-50"
                             >
                                 <XCircle class="w-4 h-4" />
                                 Refuser
-                            </button>
-                            <button
-                                v-if="isActive(selectedSubscription.status)"
-                                @click="cancelSubscription"
-                                class="flex-1 px-4 py-2 rounded-lg border border-red-500 text-red-600 font-medium flex items-center justify-center gap-2 transition-all hover:bg-red-50"
-                            >
-                                <XCircle class="w-4 h-4" />
-                                Annuler l'abonnement
                             </button>
                         </div>
                     </div>

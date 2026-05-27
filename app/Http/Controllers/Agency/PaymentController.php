@@ -80,8 +80,8 @@ class PaymentController extends Controller
         ]);
 
         return redirect('/balance')->with([
-            'message' => 'Paiement effectué avec succès',
-            'type' => 'success', // ou 'error', 'warning', 'info'
+            'message' => 'Votre abonnement est en cours de traitement. Vous recevrez une notification une fois activé.',
+            'type' => 'info', // ou 'error', 'warning', 'info'
         ]);
     }
 }

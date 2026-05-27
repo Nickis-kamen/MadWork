@@ -12,6 +12,7 @@ import Subscription from '@/Components/Subscription.vue';
 import Contact from '@/Components/Contact.vue';
 import Footer from '@/Components/Footer.vue';
 import Project from '@/Components/Project.vue';
+import Toast from '@/Components/Toastify/Toast.vue';
 
 const props = defineProps({
     agencies: Array,
@@ -26,6 +27,7 @@ const isCustomer = computed(() => user.value?.role === 'customer')
 const isAgency = computed(() => user.value?.role === 'agency')
 </script>
 <template>
+    <Toast />
     <Head title="Accueil" />
     <Nav />
     <Header />

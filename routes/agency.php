@@ -8,12 +8,24 @@ use App\Http\Controllers\Agency\PaymentController;
 use App\Http\Controllers\Agency\ProjectController;
 use App\Http\Controllers\Agency\ServiceController;
 use App\Http\Controllers\Agency\SubscriptionController;
+use App\Http\Controllers\SubscriptionController as ControllersSubscriptionController;
 use Illuminate\Support\Facades\Route;
 
 
 
 
-Route::group(['middleware' => 'agency', 'prefix' => 'agency', 'as' => 'agency.'],function()
+Route::group(['middleware' => 'no-subscription', 'prefix' => 'agency', 'as' => 'agency.'],function()
+{
+    Route::get('subscription', [ControllersSubscriptionController::class, 'index']) -> name('subscription');
+
+    Route::post('/plan/{plan}', [SubscriptionController::class, 'plan']) -> name('plan.subscription');
+
+    Route::get('/payment/{transaction}', [PaymentController::class, 'index']) -> name('payments.index');
+    Route::post('/payment/{transaction}', [PaymentController::class, 'paySubscription']) -> name('payment.paySubscription');
+
+});
+
+Route::group(['middleware' => 'subscription', 'prefix' => 'agency', 'as' => 'agency.'],function()
 {
     Route::get('dashboard', [DashboardController::class, 'index']) -> name('dashboard');
 
@@ -36,11 +48,7 @@ Route::group(['middleware' => 'agency', 'prefix' => 'agency', 'as' => 'agency.']
     Route::put('/orders/{id}/progress', [OrderController::class, 'updateProgress'])->name('orders.progress');
     Route::put('/orders/{id}/delivered', [OrderController::class, 'delivered'])->name('orders.delivered');
 
-    Route::post('/plan/{plan}', [SubscriptionController::class, 'plan']) -> name('plan.subscription');
     Route::get('/subscriptions', [SubscriptionController::class, 'index']) -> name('subscriptions.index');
-
-    Route::get('/payment/{transaction}', [PaymentController::class, 'index']) -> name('payments.index');
-    Route::post('/payment/{transaction}', [PaymentController::class, 'paySubscription']) -> name('payment.paySubscription');
 
     Route::post('/project/{id}/proposal', [ProjectController::class, 'submitProposal']) -> name('project.proposal');
 });
