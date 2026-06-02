@@ -47,6 +47,15 @@ class DevisController extends Controller
             'cdc_file' => 'nullable|file|mimes:pdf|max:5120', // max 5MB
         ]);
 
+        $userBalance = Auth::user()->balance ? Auth::user()->balance->amount : 0;
+
+        if ($userBalance < 50000) {
+            return redirect('/balance')->with([
+                'message' => 'Vous devez avoir un solde minimum de 50.000 AR pour soumettre une demande de devis.',
+                'type' => 'error'
+            ]);
+        }
+
         $service = Service::FindOrFail($request->service_id);
 
         $path = null;
@@ -66,7 +75,7 @@ class DevisController extends Controller
             'description' => $request->description,
             'cdc_file' => $path,
         ]);
-        
+
         Mail::to($service->agency->email)->send(new DemandeDevisEmail(Auth::user()));
 
         return redirect('/my-devis')->with([

@@ -745,6 +745,11 @@ const setFilter = (filter) => {
                         </span>
                     </div>
 
+                    <div v-if="selectedTransaction.type === 'withdrawal'" class="flex justify-between items-center pb-3 border-b" :style="{ borderColor: '#c10e4620' }">
+                        <span class="text-gray-600">Frais</span>
+                        <span class="font-medium" :style="{ color: '#1e002f' }">{{ formatAmount(selectedTransaction.amount <= 150000 ? selectedTransaction.amount*0.05 : selectedTransaction.amount*0.03) }}</span>
+                    </div>
+
                     <!-- Méthode de paiement (pour tous les types) -->
                     <div v-if="selectedTransaction.method" class="flex justify-between items-center pb-3 border-b" :style="{ borderColor: '#c10e4620' }">
                         <span class="text-gray-600">Méthode</span>

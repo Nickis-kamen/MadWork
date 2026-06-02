@@ -6,6 +6,8 @@ import { PiggyBank } from 'lucide-vue-next';
 
 const user = computed(() => usePage().props.auth.user)
 const isCustomer = computed(() => user.value?.role === 'customer')
+const isAgency = computed(() => user.value?.role === 'agency')
+const isAdmin = computed(() => user.value?.role === 'admin')
 
 const balance = computed(() => user.value?.balance?.amount || 0)
 
@@ -50,17 +52,35 @@ const formatAmount = (amount) => {
                         >
                             Services
                         </Link>
+                        <Link v-if="!user"
+                        href="/#contact"
+                        class="text-white hover:text-pink-600 hover:bg-pink-50 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
+                        >
+                            Contact
+                        </Link>
                         <Link v-if="isCustomer"
                             href="/my-devis"
                             class="text-white hover:text-pink-600 hover:bg-pink-50 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
                             >
                             Vos devis
                         </Link>
-                        <Link
+                        <Link v-if="isCustomer"
                             href="/orders"
                             class="text-white hover:text-pink-600 hover:bg-pink-50 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
                         >
                             Vos commandes
+                        </Link>
+                        <Link v-if="isAgency"
+                            href="/agency/dashboard"
+                            class="text-white hover:text-pink-600 hover:bg-pink-50 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
+                        >
+                            Votre espace
+                        </Link>
+                        <Link v-if="isAdmin"
+                            href="/admin/dashboard"
+                            class="text-white hover:text-pink-600 hover:bg-pink-50 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
+                        >
+                            Espace admin
                         </Link>
                     </div>
                 </div>

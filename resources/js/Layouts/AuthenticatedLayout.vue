@@ -1,12 +1,24 @@
 <script setup>
 import Sidebar from '@/Components/Dashboard/Sidebar.vue';
 import Toast from '@/Components/Toastify/Toast.vue';
-import { usePage } from '@inertiajs/vue3';
+import { Link, usePage } from '@inertiajs/vue3';
 import { ChevronDown } from 'lucide-vue-next';
 import { computed } from 'vue';
 
 const user = computed(() => usePage().props.auth.user);
 const role = computed(() => user.value?.role);
+
+const balance = computed(() => user.value?.balance?.amount || 0)
+
+// Formater le montant
+const formatAmount = (amount) => {
+    return new Intl.NumberFormat('fr-MG', {
+        style: 'currency',
+        currency: 'MGA',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0
+    }).format(amount);
+};
 
 </script>
 
@@ -24,6 +36,13 @@ const role = computed(() => user.value?.role);
                     </div>
                     <!-- Actions utilisateur -->
                     <div class="flex items-center space-x-4">
+                        <Link
+                        href="/balance">
+                            <p class="bg-amber-500 p-2 rounded-xl flex gap-2 items-center font-bold text-white">
+                                <PiggyBank />
+                                {{ formatAmount(balance) }}
+                            </p>
+                        </Link>
                         <!-- Profil utilisateur -->
                         <div class="flex items-center space-x-3 group cursor-pointer">
                         <!-- Avatar -->

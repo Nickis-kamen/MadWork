@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Balance;
 use App\Models\Transaction;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -81,6 +82,24 @@ class BalanceController extends Controller
             ]);
         }
 
+        $admin = User::where('role', 'admin')->first();
+        $balanceAdmin = Balance::where('user_id', $admin->id);
+
+        if($request->amount <= 150000 ) {
+            $fee = $request->amount * 0.05;
+        }else {
+            $fee = $request->amount * 0.03;
+        }
+
+        if (!$balanceAdmin->exists()) {
+            Balance::create([
+                'user_id' => $admin->id,
+                'amount' => $fee,
+            ]);
+        } else {
+            $balanceAdmin->increment('amount', $fee);
+        }
+
         // Create a new transaction
         Transaction::create([
             'reference' => 'TXN-' . uniqid(),
@@ -88,7 +107,7 @@ class BalanceController extends Controller
             'type' => 'withdrawal',
             'method' => $request->method,
             'number' => $request->number,
-            'amount' => -$request->amount,
+            'amount' => $request->amount,
             'status' => 'pending',
         ]);
 
