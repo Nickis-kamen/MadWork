@@ -32,6 +32,15 @@ class ProjectController extends Controller
             'budget' => 'required|numeric|min:1',
         ]);
 
+        $userBalance = Auth::user()->balance ? Auth::user()->balance->amount : 0;
+
+        if ($userBalance < 50000) {
+            return redirect('/balance')->with([
+                'message' => 'Vous devez avoir un solde minimum de 50.000 AR pour publier un projet.',
+                'type' => 'error'
+            ]);
+        }
+
         $path = null;
         if ($request->hasFile('cdc_file')) {
             $file = $request->file('cdc_file');
