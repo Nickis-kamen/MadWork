@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Mail\VerifyEmail;
 use App\Models\Category;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
@@ -10,9 +11,11 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rules;
 use Inertia\Inertia;
 use Inertia\Response;
+use Illuminate\Support\Str;
 
 class RegisteredUserController extends Controller
 {
@@ -58,11 +61,14 @@ class RegisteredUserController extends Controller
             $path = null;
         }
 
+        $verification_token = Str::random(60);
+
         $user = User::create([
             'name' => $request->name,
             'first_name' => $request->first_name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'verification_token' => $verification_token,
             'image' => $path,
             'phone' => $request->phone,
             'address' => $request->address,
@@ -73,14 +79,11 @@ class RegisteredUserController extends Controller
 
         event(new Registered($user));
 
-        Auth::login($user);
+        Mail::to($user->email)->send(new VerifyEmail($user, $verification_token));
 
-        if (Auth::user()->role === 'admin') {
-            return redirect(route('admin.dashboard', absolute: false));
-        }else if (Auth::user()->role === 'agency') {
-            return redirect(route('agency.dashboard', absolute: false));
-        }else{
-            return redirect(route('home', absolute: false));
-        }
+        return redirect('/login')->with([
+            'message' => 'Veuillez vérifier votre adresse e-mail pour activer votre compte',
+            'type' => 'info'
+        ]);
     }
 }

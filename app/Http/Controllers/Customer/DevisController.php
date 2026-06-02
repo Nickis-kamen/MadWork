@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
+use App\Mail\DemandeDevisEmail;
 use App\Models\Devis;
 use App\Models\Order;
 use App\Models\Service;
@@ -10,6 +11,7 @@ use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
 
 class DevisController extends Controller
@@ -64,6 +66,8 @@ class DevisController extends Controller
             'description' => $request->description,
             'cdc_file' => $path,
         ]);
+        
+        Mail::to($service->agency->email)->send(new DemandeDevisEmail(Auth::user()));
 
         return redirect('/my-devis')->with([
             'message' => 'Demande de devis soumise avec succès !',

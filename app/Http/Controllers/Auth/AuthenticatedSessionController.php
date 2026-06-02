@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Mail\VerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -32,7 +34,20 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
 
         $request->session()->regenerate();
+        $user = Auth::user();
 
+        if(!$user->is_verified)
+        {
+            Mail::to($user->email)->send(new VerifyEmail($user, $user->verification_token));
+
+            Auth::logout();
+
+            return redirect('/login')->with([
+                'message' => 'Veuillez vérifier votre adresse e-mail pour activer votre compte',
+                'type' => 'info'
+            ]);
+        }
+        
         if (Auth::user()->role === 'admin') {
             return redirect(route('admin.dashboard', absolute: false));
         }

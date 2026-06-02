@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('image')->nullable();
             $table->boolean('is_verified')->default(false);
+            $table->string('verification_token')->nullable();
             $table->date('date_of_birth');
             $table->enum('role', ['customer', 'agency', 'admin'])->default('customer');
             $table->string('phone');

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AgencyController;
 use App\Http\Controllers\BalanceController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProjectController;
@@ -16,6 +17,8 @@ Route::get('/services/{service}', [ServiceController::class, 'show'])->name('ser
 Route::get('/agencies/{agency}', [AgencyController::class, 'show'])->name('agencies.show');
 Route::get('/projects', [ProjectController::class, 'index'])->name('projects.index');
 Route::get('/project/{project}', [ProjectController::class, 'show'])->name('projects.show');
+
+Route::post('/contact', [ContactController::class, 'send'])->name('contact.send');
 
 Route::middleware('auth')->group(function () {
     Route::get('/balance', [BalanceController::class, 'index'])->name('balance.index');

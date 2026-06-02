@@ -1,55 +1,42 @@
 <script setup>
+import { useForm } from '@inertiajs/vue3'
 import { ref, reactive } from 'vue'
 
-const formData = reactive({
+const form = useForm({
   name: '',
   email: '',
   phone: '',
-  company: '',
-  message: '',
-  projectType: ''
+  entreprise: '',
+  userMessage: ''
 })
 
 const isLoading = ref(false)
 const isSuccess = ref(false)
 const errorMessage = ref('')
 
-const projectTypes = [
-  { value: 'web', label: 'Développement Web' },
-  { value: 'mobile', label: 'Application Mobile' },
-  { value: 'design', label: 'Design UI/UX' },
-  { value: 'marketing', label: 'Marketing Digital' },
-  { value: 'consulting', label: 'Consulting' },
-  { value: 'other', label: 'Autre' }
-]
 
 const handleSubmit = async () => {
   isLoading.value = true
   errorMessage.value = ''
 
   // Validation simple
-  if (!formData.name || !formData.email || !formData.message) {
+  if (!form.name || !form.email || !form.userMessage) {
     errorMessage.value = 'Veuillez remplir tous les champs obligatoires'
     isLoading.value = false
     return
   }
 
-  // Simuler un envoi vers une API
   try {
-    // Remplacez par votre appel API réel
-    await new Promise(resolve => setTimeout(resolve, 1500))
-
-    console.log('Formulaire soumis:', formData)
-    isSuccess.value = true
-
-    // Réinitialiser le formulaire après succès
-    setTimeout(() => {
-      isSuccess.value = false
-      Object.keys(formData).forEach(key => {
-        formData[key] = ''
-      })
-    }, 3000)
-
+    form.post('/contact', {
+            preserveScroll: true,
+            onSuccess: () => {
+                isSuccess.value = true;
+                form.reset();
+            },
+            onError: (errors) => {
+                console.error(errors);
+            }
+        });
   } catch (error) {
     errorMessage.value = 'Une erreur est survenue. Veuillez réessayer.'
     console.error(error)
@@ -88,7 +75,7 @@ const handleSubmit = async () => {
                   Nom complet <span class="text-[#c10e46]">*</span>
                 </label>
                 <input
-                  v-model="formData.name"
+                  v-model="form.name"
                   type="text"
                   required
                   class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-[#c10e46] transition-colors"
@@ -101,7 +88,7 @@ const handleSubmit = async () => {
                   Email <span class="text-[#c10e46]">*</span>
                 </label>
                 <input
-                  v-model="formData.email"
+                  v-model="form.email"
                   type="email"
                   required
                   class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-[#c10e46] transition-colors"
@@ -117,7 +104,7 @@ const handleSubmit = async () => {
                   Téléphone
                 </label>
                 <input
-                  v-model="formData.phone"
+                  v-model="form.phone"
                   type="tel"
                   class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-[#c10e46] transition-colors"
                   placeholder="+261 38 06 838 79"
@@ -129,7 +116,7 @@ const handleSubmit = async () => {
                   Entreprise
                 </label>
                 <input
-                  v-model="formData.company"
+                  v-model="form.entreprise"
                   type="text"
                   class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-[#c10e46] transition-colors"
                   placeholder="Votre entreprise"
@@ -143,7 +130,7 @@ const handleSubmit = async () => {
                 Message <span class="text-[#c10e46]">*</span>
               </label>
               <textarea
-                v-model="formData.message"
+                v-model="form.userMessage"
                 required
                 rows="5"
                 class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-[#c10e46] transition-colors resize-none"

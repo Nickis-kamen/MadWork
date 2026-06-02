@@ -15,6 +15,7 @@ import {
   Calendar,
 } from 'lucide-vue-next';
 import Nav from '@/Components/Nav.vue';
+import Toast from '@/Components/Toastify/Toast.vue';
 
 // Props reçues de Laravel
 const props = defineProps({
@@ -77,6 +78,7 @@ const formatAmount = (amount) => {
 <template>
     <Head title="Mes Devis" />
     <Nav />
+    <Toast />
     <!-- Container -->
     <div class="p-4 sm:p-6 space-y-6 bg-white min-h-screen mt-20">
         <!-- Header avec bouton nouveau devis -->
