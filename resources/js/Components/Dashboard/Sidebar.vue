@@ -88,9 +88,9 @@ if(isAdmin.value){
             badge: 0
         },
         {
-            id: 'requests',
+            id: 'devis',
             name: 'Demandes Devis',
-            href: '/admin/requests',
+            href: '/admin/devis',
             icon: FileText,
             badge: 3
         },

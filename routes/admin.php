@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AgencyController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\DevisController;
 use App\Http\Controllers\Admin\SubscriptionController;
 use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
@@ -25,4 +26,6 @@ Route::group(['middleware' => 'admin', 'prefix' => 'admin', 'as' => 'admin.'],fu
 
     Route::get('subscriptions', [SubscriptionController::class, 'index']) -> name('subscriptions');
     Route::put('subscriptions/{subscription}/active', [SubscriptionController::class, 'active']) -> name('subscriptions.active');
+
+    Route::get('devis', [DevisController::class, 'index']) -> name('devis');
 });
