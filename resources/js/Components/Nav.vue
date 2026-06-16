@@ -20,7 +20,7 @@ const formatAmount = (amount) => {
         minimumFractionDigits: 0,
         maximumFractionDigits: 0
     }).format(amount);
-};
+};  
 
 // Fermer le menu mobile après navigation
 const closeMobileMenu = () => {

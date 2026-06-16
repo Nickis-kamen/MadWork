@@ -121,6 +121,16 @@ const formatDate = (dateString) => {
     });
 };
 
+// Formater le montant
+const formatAmount = (amount) => {
+    return new Intl.NumberFormat('fr-MG', {
+        style: 'currency',
+        currency: 'MGA',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0
+    }).format(amount);
+};
+
 const isPending = (status) => status === 'pending';
 const hasProposal = (devi) => devi.price_agency || devi.delai_agency || devi.description_agency;
 </script>
@@ -184,14 +194,14 @@ const hasProposal = (devi) => devi.price_agency || devi.delai_agency || devi.des
                             </div>
                             <div>
                                 <p class="text-gray-500 text-xs">Budget</p>
-                                <p class="font-medium text-xs">{{ devi.budget }} Ar</p>
+                                <p class="font-medium text-xs">{{formatAmount(devi.budget) }}</p>
                             </div>
                         </div>
 
                         <p class="text-xs text-gray-500 line-clamp-2 mb-3">{{ devi.description }}</p>
 
                         <div v-if="hasProposal(devi)" class="mb-3 p-2 rounded-lg" :style="{ background: '#c10e4610' }">
-                            <p class="text-xs" :style="{ color: '#c10e46' }">💰 {{ devi.price }} Ar - ⏱️ {{ devi.delai_agency }} jours</p>
+                            <p class="text-xs" :style="{ color: '#c10e46' }">💰 {{ formatAmount(devi.price) }} - ⏱️ {{ devi.delai_agency }} jours</p>
                         </div>
 
                         <div class="flex justify-end space-x-2">
@@ -236,9 +246,9 @@ const hasProposal = (devi) => devi.price_agency || devi.delai_agency || devi.des
                                 </td>
                                 <td class="px-6 py-4 text-sm">{{ formatDate(devi.created_at) }}</td>
                                 <td class="px-6 py-4 text-sm">{{ devi.delai }} jours</td>
-                                <td class="px-6 py-4 text-sm">{{ devi.budget }} Ar</td>
+                                <td class="px-6 py-4 text-sm">{{ formatAmount(devi.budget) }}</td>
                                 <td class="px-6 py-4 text-sm">
-                                    <span v-if="devi.price" :style="{ color: '#c10e46' }" class="font-semibold">{{ devi.price }} Ar</span>
+                                    <span v-if="devi.price" :style="{ color: '#c10e46' }" class="font-semibold">{{ formatAmount(devi.price) }}</span>
                                     <span v-else class="text-gray-400">-</span>
                                 </td>
                                 <td class="px-6 py-4">
@@ -310,7 +320,7 @@ const hasProposal = (devi) => devi.price_agency || devi.delai_agency || devi.des
                             </div>
                             <div class="flex items-center space-x-2 px-3 py-2 rounded-lg bg-gray-100">
                                 <HandCoins class="w-4 h-4 text-gray-600" />
-                                <span class="text-sm text-gray-600">Budget: {{ selectedDevi.budget }} Ar</span>
+                                <span class="text-sm text-gray-600">Budget: {{ formatAmount(selectedDevi.budget) }}</span>
                             </div>
                         </div>
 
@@ -360,7 +370,7 @@ const hasProposal = (devi) => devi.price_agency || devi.delai_agency || devi.des
                             <div v-else class="space-y-3">
                                 <div class="p-3 rounded-lg" :class="selectedDevi.price_agency ? 'bg-green-50' : 'bg-gray-100'">
                                     <p class="text-xs text-gray-500">Montant proposé</p>
-                                    <p class="text-xl font-bold" :style="{ color: '#c10e46' }">{{ selectedDevi.price || '-' }} Ar</p>
+                                    <p class="text-xl font-bold" :style="{ color: '#c10e46' }">{{ formatAmount(selectedDevi.price) || '-' }}</p>
                                 </div>
                                 <div class="p-3 rounded-lg" :class="selectedDevi.delai_agency ? 'bg-blue-50' : 'bg-gray-100'">
                                     <p class="text-xs text-gray-500">Délai proposé</p>

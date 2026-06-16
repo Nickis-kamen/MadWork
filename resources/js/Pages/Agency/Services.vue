@@ -240,9 +240,14 @@ const deleteDetail = (detail) => {
     }
 };
 
-// Utilitaires
-const formatPrice = (price) => {
-    return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(price);
+// Formater le montant
+const formatAmount = (amount) => {
+    return new Intl.NumberFormat('fr-MG', {
+        style: 'currency',
+        currency: 'MGA',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0
+    }).format(amount);
 };
 
 const getCategoryName = (categoryId) => {
@@ -440,7 +445,7 @@ const submitButtonText = computed(() => {
                                 </div>
                                 <div class="flex-1">
                                     <p class="font-medium" :style="{ color: '#1e002f' }">{{ service.title }}</p>
-                                    <p class="text-sm text-gray-600 mt-1">{{ formatPrice(service.price) }}</p>
+                                    <p class="text-sm text-gray-600 mt-1">{{ formatAmount(service.price) }}</p>
                                     <p class="text-xs text-gray-500 mt-1">{{ getCategoryName(service.category_id) }}</p>
                                 </div>
                                 <div class="flex gap-2">
@@ -517,7 +522,7 @@ const submitButtonText = computed(() => {
                                     {{ getCategoryName(service.category_id) }}
                                 </td>
                                 <td class="px-6 py-4 text-sm font-semibold" :style="{ color: '#c10e46' }">
-                                    {{ formatPrice(service.price) }}
+                                    {{ formatAmount(service.price) }}
                                 </td>
                                 <td class="px-6 py-4 text-sm text-gray-600 max-w-xs truncate">
                                     {{ service.description }}
