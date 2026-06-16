@@ -11,7 +11,8 @@ import {
   Menu,
   Building2,
   ChartColumnStacked,
-  BanknoteArrowUp
+  BanknoteArrowUp,
+  CalendarCheck
 } from 'lucide-vue-next';
 import ApplicationLogoMini from '../ApplicationLogoMini.vue';
 
@@ -84,7 +85,7 @@ if(isAdmin.value){
             id: 'subscriptions',
             name: 'Abonnements',
             href: '/admin/subscriptions',
-            icon: BanknoteArrowUp,
+            icon: CalendarCheck,
             badge: 0
         },
         {
@@ -99,6 +100,13 @@ if(isAdmin.value){
             name: 'Projets Actifs',
             href: '/admin/orders',
             icon: Folder,
+            badge: 0
+        },
+        {
+            id: 'transactions',
+            name: 'Transactions',
+            href: '/admin/transactions',
+            icon: BanknoteArrowUp,
             badge: 0
         },
     ];

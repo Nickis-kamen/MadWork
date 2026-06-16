@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DevisController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\SubscriptionController;
+use App\Http\Controllers\Admin\TransactionController;
 use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -31,4 +32,6 @@ Route::group(['middleware' => 'admin', 'prefix' => 'admin', 'as' => 'admin.'],fu
     Route::get('devis', [DevisController::class, 'index']) -> name('devis');
 
     Route::get('orders', [OrderController::class, 'index']) -> name('orders');
+
+    Route::get('transactions', [TransactionController::class, 'index']) -> name('transactions');
 });
