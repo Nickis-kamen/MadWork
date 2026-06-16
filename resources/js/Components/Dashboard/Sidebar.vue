@@ -60,24 +60,24 @@ if(isAdmin.value){
             badge: 0
         },
         {
+            id: 'users',
+            name: 'Utilisateurs',
+            href: '/admin/users',
+            icon: UserCircle,
+            badge: 0
+        },
+        {
+            id: 'agencies',
+            name: 'Agences',
+            href: '/admin/agencies',
+            icon: Building2,
+            badge: 0
+        },
+        {
             id: 'categories',
             name: 'Catégories',
             href: '/admin/categories',
             icon: ChartColumnStacked,
-            badge: 0
-        },
-        {
-            id: 'staff',
-            name: 'Équipe',
-            href: '/admin/staff',
-            icon: Users,
-            badge: 0
-        },
-        {
-            id: 'clients',
-            name: 'Clients',
-            href: '/admin/customers',
-            icon: UserCircle,
             badge: 0
         },
         {

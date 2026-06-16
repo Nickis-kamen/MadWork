@@ -20,41 +20,45 @@
 
     // Props reçues de Laravel
     const props = defineProps({
-        customers: {
+        users: {
             type: Array,
             default: () => []
-        },
-        filters: {
-            type: Object,
-            default: () => ({})
         }
     });
 
     // État pour le popup
     const showModal = ref(false);
-    const selectedCustomer = ref(null);
+    const selecteduser = ref(null);
 
     // État pour la recherche
     const searchQuery = ref('');
 
     // Fonction pour ouvrir le popup
-    const openDetails = (customer) => {
-        selectedCustomer.value = customer;
+    const openDetails = (user) => {
+        selecteduser.value = user;
         showModal.value = true;
     };
 
     // Fonction pour fermer le popup
     const closeModal = () => {
         showModal.value = false;
-        selectedCustomer.value = null;
+        selecteduser.value = null;
     };
 
     // Fonction pour obtenir le statut de vérification
-    const getVerificationStatus = (customer) => {
-        if (customer.is_verified) {
+    const getVerificationStatus = (user) => {
+        if (user.is_verified) {
             return { label: 'Vérifié', icon: CheckCircle, color: 'text-green-600', bg: 'bg-green-100' };
         } else {
             return { label: 'Non vérifié', icon: Clock, color: 'text-yellow-600', bg: 'bg-yellow-100' };
+        }
+    };
+
+    const getVerificationRole = (user) => {
+        if (user.role === 'customer') {
+            return { label: 'Client', color: 'text-green-600', bg: 'bg-green-100' };
+        } else {
+            return { label: 'Agence', color: 'text-blue-600', bg: 'bg-blue-100' };
         }
     };
 
@@ -68,17 +72,17 @@
         });
     };
 
-    // Filtrer les clients par recherche
-    const filteredCustomers = computed(() => {
-        let filtered = props.customers;
+    // Filtrer les utilisateurs par recherche
+    const filteredusers = computed(() => {
+        let filtered = props.users;
 
         // Filtre par recherche
         if (searchQuery.value) {
             const query = searchQuery.value.toLowerCase();
-            filtered = filtered.filter(customer =>
-                customer.name?.toLowerCase().includes(query) ||
-                customer.email?.toLowerCase().includes(query) ||
-                customer.phone?.includes(query)
+            filtered = filtered.filter(user =>
+                user.name?.toLowerCase().includes(query) ||
+                user.email?.toLowerCase().includes(query) ||
+                user.phone?.includes(query)
             );
         }
 
@@ -87,7 +91,7 @@
     </script>
 
     <template>
-        <Head title="Gestion des clients" />
+        <Head title="Gestion des utilisateurs" />
         <AuthenticatedLayout>
             <!-- Container -->
             <div class="p-4 sm:p-6 space-y-6 bg-gray-50 min-h-screen">
@@ -95,10 +99,10 @@
                 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div>
                         <h1 class="text-2xl sm:text-3xl font-bold" :style="{ color: '#1e002f' }">
-                            Liste des clients
+                            Liste des utilisateurs
                         </h1>
                         <p class="text-gray-600 mt-1 text-sm sm:text-base">
-                            Consultez tous vos clients inscrits sur la plateforme
+                            Consultez tous vos utilisateurs inscrits sur la plateforme
                         </p>
                     </div>
                 </div>
@@ -117,13 +121,13 @@
                     </div>
                 </div>
 
-                <!-- Liste des clients -->
+                <!-- Liste des utilisateurs -->
                 <div class="bg-white rounded-xl border overflow-hidden" :style="{ borderColor: '#c10e4620' }">
                     <!-- Version mobile (cartes) -->
                     <div class="block lg:hidden divide-y" :style="{ borderColor: '#c10e4620' }">
                         <div
-                            v-for="customer in filteredCustomers"
-                            :key="customer.id"
+                            v-for="user in filteredusers"
+                            :key="user.id"
                             class="p-4 hover:bg-gray-50 transition-colors"
                         >
                             <div class="flex items-center justify-between mb-3">
@@ -132,45 +136,45 @@
                                         class="w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium"
                                         :style="{ background: 'linear-gradient(135deg, #c10e46 0%, #1e002f 100%)', color: 'white' }"
                                     >
-                                        <img v-if="customer.image" :src="`/storage/${customer.image}`" alt="Avatar" class="w-full h-full rounded-full object-cover">
-                                        <span v-else class="text-white">{{ customer.name?.charAt(0) || '?' }}</span>
+                                        <img v-if="user.image" :src="`/storage/${user.image}`" alt="Avatar" class="w-full h-full rounded-full object-cover">
+                                        <span v-else class="text-white">{{ user.name?.charAt(0) || '?' }}</span>
                                     </div>
                                     <div>
-                                        <p class="font-semibold text-sm" :style="{ color: '#1e002f' }">{{ customer.name }}</p>
-                                        <p v-if="customer.company" class="text-xs text-gray-500">{{ customer.company }}</p>
+                                        <p class="font-semibold text-sm" :style="{ color: '#1e002f' }">{{ user.name }}</p>
+                                        <p v-if="user.company" class="text-xs text-gray-500">{{ user.company }}</p>
                                     </div>
                                 </div>
                                 <span
                                     class="px-2 py-1 rounded-full text-xs font-medium inline-flex items-center"
-                                    :class="getVerificationStatus(customer).bg"
+                                    :class="getVerificationStatus(user).bg"
                                 >
-                                    <component :is="getVerificationStatus(customer).icon" class="w-3 h-3 mr-1" :class="getVerificationStatus(customer).color" />
-                                    <span :class="getVerificationStatus(customer).color">{{ getVerificationStatus(customer).label }}</span>
+                                    <component :is="getVerificationStatus(user).icon" class="w-3 h-3 mr-1" :class="getVerificationStatus(user).color" />
+                                    <span :class="getVerificationStatus(user).color">{{ getVerificationStatus(user).label }}</span>
                                 </span>
                             </div>
 
                             <div class="grid grid-cols-2 gap-3 text-sm mb-3">
                                 <div>
                                     <p class="text-gray-500 text-xs">Email</p>
-                                    <p class="font-medium text-xs truncate" :style="{ color: '#1e002f' }">{{ customer.email }}</p>
+                                    <p class="font-medium text-xs truncate" :style="{ color: '#1e002f' }">{{ user.email }}</p>
                                 </div>
                                 <div>
                                     <p class="text-gray-500 text-xs">Téléphone</p>
-                                    <p class="font-medium text-xs" :style="{ color: '#1e002f' }">{{ customer.phone || '-' }}</p>
+                                    <p class="font-medium text-xs" :style="{ color: '#1e002f' }">{{ user.phone || '-' }}</p>
                                 </div>
                                 <div>
                                     <p class="text-gray-500 text-xs">Inscription</p>
-                                    <p class="font-medium text-xs" :style="{ color: '#1e002f' }">{{ formatDate(customer.created_at) }}</p>
+                                    <p class="font-medium text-xs" :style="{ color: '#1e002f' }">{{ formatDate(user.created_at) }}</p>
                                 </div>
                                 <div>
                                     <p class="text-gray-500 text-xs">ID</p>
-                                    <p class="font-medium text-xs font-mono" :style="{ color: '#1e002f' }">#{{ customer.id }}</p>
+                                    <p class="font-medium text-xs font-mono" :style="{ color: '#1e002f' }">#{{ user.id }}</p>
                                 </div>
                             </div>
 
                             <div class="flex justify-end">
                                 <button
-                                    @click="openDetails(customer)"
+                                    @click="openDetails(user)"
                                     class="p-2 rounded-lg border hover:bg-gray-100 transition-colors inline-flex items-center"
                                     :style="{ borderColor: '#c10e4620' }"
                                     title="Voir détails"
@@ -182,7 +186,7 @@
                         </div>
 
                         <!-- Message si aucun client (mobile) -->
-                        <div v-if="filteredCustomers.length === 0" class="p-12 text-center">
+                        <div v-if="filteredusers.length === 0" class="p-12 text-center">
                             <Users class="w-16 h-16 mx-auto text-gray-300 mb-4" />
                             <p class="text-gray-500 text-lg mb-2">Aucun client trouvé</p>
                             <p class="text-gray-400 text-sm">
@@ -197,9 +201,9 @@
                             <!-- En-tête -->
                             <thead class="bg-gray-50">
                                 <tr>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Client</th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rôle</th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Téléphone</th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Inscription</th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
@@ -208,10 +212,7 @@
                             </thead>
                             <!-- Corps du tableau -->
                             <tbody class="bg-white divide-y" :style="{ borderColor: '#c10e4620' }">
-                                <tr v-for="customer in filteredCustomers" :key="customer.id" class="hover:bg-gray-50 transition-colors">
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-mono" :style="{ color: '#1e002f' }">
-                                        #{{ customer.id }}
-                                    </td>
+                                <tr v-for="user in filteredusers" :key="user.id" class="hover:bg-gray-50 transition-colors">
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="flex items-center">
                                             <div class="flex-shrink-0 h-8 w-8">
@@ -219,37 +220,45 @@
                                                     class="h-8 w-8 rounded-full flex items-center justify-center text-sm font-medium"
                                                     :style="{ background: 'linear-gradient(135deg, #c10e46 0%, #1e002f 100%)', color: 'white' }"
                                                 >
-                                                    <img v-if="customer.image" :src="`/storage/${customer.image}`" alt="Avatar" class="w-full h-full rounded-full object-cover">
-                                                    <span v-else>{{ customer.name?.charAt(0) || '?' }}</span>
+                                                    <img v-if="user.image" :src="`/storage/${user.image}`" alt="Avatar" class="w-full h-full rounded-full object-cover">
+                                                    <span v-else>{{ user.name?.charAt(0) || '?' }}</span>
                                                 </div>
                                             </div>
                                             <div class="ml-3">
-                                                <p class="text-sm font-medium" :style="{ color: '#1e002f' }">{{ customer.name }}</p>
-                                                <p v-if="customer.company" class="text-xs text-gray-500">{{ customer.company }}</p>
+                                                <p class="text-sm font-medium" :style="{ color: '#1e002f' }">{{ user.name }}</p>
+                                                <p v-if="user.company" class="text-xs text-gray-500">{{ user.company }}</p>
                                             </div>
                                         </div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                                        {{ customer.email }}
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                                        {{ customer.phone || '-' }}
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                                        {{ formatDate(customer.created_at) }}
+                                        {{ user.email }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <span
                                             class="px-2 py-1 rounded-full text-xs font-medium inline-flex items-center"
-                                            :class="getVerificationStatus(customer).bg"
+                                            :class="getVerificationRole(user).bg"
                                         >
-                                            <component :is="getVerificationStatus(customer).icon" class="w-3 h-3 mr-1" :class="getVerificationStatus(customer).color" />
-                                            <span :class="getVerificationStatus(customer).color">{{ getVerificationStatus(customer).label }}</span>
+                                            <span :class="getVerificationRole(user).color">{{ getVerificationRole(user).label }}</span>
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                                        {{ user.phone || '-' }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                                        {{ formatDate(user.created_at) }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span
+                                            class="px-2 py-1 rounded-full text-xs font-medium inline-flex items-center"
+                                            :class="getVerificationStatus(user).bg"
+                                        >
+                                            <component :is="getVerificationStatus(user).icon" class="w-3 h-3 mr-1" :class="getVerificationStatus(user).color" />
+                                            <span :class="getVerificationStatus(user).color">{{ getVerificationStatus(user).label }}</span>
                                         </span>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                         <button
-                                            @click="openDetails(customer)"
+                                            @click="openDetails(user)"
                                             class="p-2 rounded-lg border hover:bg-gray-100 transition-colors inline-flex items-center"
                                             :style="{ borderColor: '#c10e4620' }"
                                             title="Voir détails"
@@ -259,7 +268,7 @@
                                     </td>
                                 </tr>
                                 <!-- Message si aucun client -->
-                                <tr v-if="filteredCustomers.length === 0">
+                                <tr v-if="filteredusers.length === 0">
                                     <td colspan="7" class="px-6 py-12 text-center">
                                         <Users class="w-16 h-16 mx-auto text-gray-300 mb-4" />
                                         <p class="text-gray-500 text-lg mb-2">Aucun client trouvé</p>
@@ -275,7 +284,7 @@
             </div>
 
             <!-- Modal / Popup pour les détails du client -->
-            <div v-if="showModal && selectedCustomer" class="flex items-center justify-center fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+            <div v-if="showModal && selecteduser" class="flex items-center justify-center fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
                 <!-- Overlay -->
                 <div class="fixed inset-0 bg-black bg-opacity-50 transition-opacity" @click="closeModal"></div>
 
@@ -288,12 +297,16 @@
                                 class="w-12 h-12 rounded-xl flex items-center justify-center"
                                 :style="{ background: 'linear-gradient(135deg, #c10e4610 0%, #1e002f10 100%)' }"
                             >
-                                <img v-if="selectedCustomer.image" :src="`/storage/${selectedCustomer.image}`" alt="Avatar" class="w-full h-full rounded-xl object-cover">
+                                <img v-if="selecteduser.image" :src="`/storage/${selecteduser.image}`" alt="Avatar" class="w-full h-full rounded-xl object-cover">
                                 <User v-else class="w-6 h-6" :style="{ color: '#c10e46' }" />
                             </div>
                             <div>
-                                <h3 class="text-xl font-bold" :style="{ color: '#1e002f' }">{{ selectedCustomer.name }}</h3>
-                                <p class="text-sm text-gray-500">Client #{{ selectedCustomer.id }}</p>
+                                <h3 class="text-xl font-bold" :style="{ color: '#1e002f' }">{{ selecteduser.name }}</h3>
+                                <span class="px-2 py-1 rounded-full text-xs font-medium inline-flex items-center"
+                                        :class="getVerificationRole(selecteduser).bg"
+                                    >
+                                        <span :class="getVerificationRole(selecteduser).color">{{ getVerificationRole(selecteduser).label }}</span>
+                                </span>
                             </div>
                         </div>
                         <button
@@ -309,15 +322,15 @@
                     <div class="p-6 space-y-6">
                         <!-- Statut et informations rapides -->
                         <div class="flex flex-wrap gap-4">
-                            <div class="flex items-center space-x-2 px-3 py-2 rounded-lg" :class="getVerificationStatus(selectedCustomer).bg">
-                                <component :is="getVerificationStatus(selectedCustomer).icon" class="w-4 h-4" :class="getVerificationStatus(selectedCustomer).color" />
-                                <span class="text-sm font-medium" :class="getVerificationStatus(selectedCustomer).color">
-                                    {{ getVerificationStatus(selectedCustomer).label }}
+                            <div class="flex items-center space-x-2 px-3 py-2 rounded-lg" :class="getVerificationStatus(selecteduser).bg">
+                                <component :is="getVerificationStatus(selecteduser).icon" class="w-4 h-4" :class="getVerificationStatus(selecteduser).color" />
+                                <span class="text-sm font-medium" :class="getVerificationStatus(selecteduser).color">
+                                    {{ getVerificationStatus(selecteduser).label }}
                                 </span>
                             </div>
                             <div class="flex items-center space-x-2 px-3 py-2 rounded-lg bg-gray-100">
                                 <Calendar class="w-4 h-4 text-gray-600" />
-                                <span class="text-sm text-gray-600">Inscrit le: {{ formatDate(selectedCustomer.created_at) }}</span>
+                                <span class="text-sm text-gray-600">Inscrit le: {{ formatDate(selecteduser.created_at) }}</span>
                             </div>
                         </div>
 
@@ -332,7 +345,7 @@
                                         <User class="w-5 h-5 text-gray-400 mt-0.5" />
                                         <div>
                                             <p class="text-xs text-gray-500">Nom complet</p>
-                                            <p class="text-sm font-medium" :style="{ color: '#1e002f' }">{{ selectedCustomer.name }}</p>
+                                            <p class="text-sm font-medium" :style="{ color: '#1e002f' }">{{ selecteduser.name }}</p>
                                         </div>
                                     </div>
 
@@ -340,7 +353,7 @@
                                         <Mail class="w-5 h-5 text-gray-400 mt-0.5" />
                                         <div>
                                             <p class="text-xs text-gray-500">Email</p>
-                                            <p class="text-sm" :style="{ color: '#1e002f' }">{{ selectedCustomer.email }}</p>
+                                            <p class="text-sm" :style="{ color: '#1e002f' }">{{ selecteduser.email }}</p>
                                         </div>
                                     </div>
 
@@ -348,7 +361,7 @@
                                         <Phone class="w-5 h-5 text-gray-400 mt-0.5" />
                                         <div>
                                             <p class="text-xs text-gray-500">Téléphone</p>
-                                            <p class="text-sm" :style="{ color: '#1e002f' }">{{ selectedCustomer.phone || 'Non renseigné' }}</p>
+                                            <p class="text-sm" :style="{ color: '#1e002f' }">{{ selecteduser.phone || 'Non renseigné' }}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -359,31 +372,14 @@
                                 <h4 class="font-semibold text-sm uppercase tracking-wider text-gray-500">Informations professionnelles</h4>
 
                                 <div class="space-y-3">
-                                    <div v-if="selectedCustomer.company" class="flex items-start space-x-3">
-                                        <FileText class="w-5 h-5 text-gray-400 mt-0.5" />
-                                        <div>
-                                            <p class="text-xs text-gray-500">Entreprise</p>
-                                            <p class="text-sm font-medium" :style="{ color: '#1e002f' }">{{ selectedCustomer.company }}</p>
-                                        </div>
-                                    </div>
-
-                                    <div v-if="selectedCustomer.siret" class="flex items-start space-x-3">
-                                        <FileText class="w-5 h-5 text-gray-400 mt-0.5" />
-                                        <div>
-                                            <p class="text-xs text-gray-500">SIRET</p>
-                                            <p class="text-sm" :style="{ color: '#1e002f' }">{{ selectedCustomer.siret }}</p>
-                                        </div>
-                                    </div>
-
-                                    <div v-if="selectedCustomer.address" class="flex items-start space-x-3">
+                                    <div v-if="selecteduser.address" class="flex items-start space-x-3">
                                         <MapPin class="w-5 h-5 text-gray-400 mt-0.5" />
                                         <div>
                                             <p class="text-xs text-gray-500">Adresse</p>
-                                            <p class="text-sm" :style="{ color: '#1e002f' }">{{ selectedCustomer.address }}</p>
+                                            <p class="text-sm" :style="{ color: '#1e002f' }">{{ selecteduser.address }}</p>
                                         </div>
                                     </div>
-
-                                    <div v-if="!selectedCustomer.company && !selectedCustomer.siret && !selectedCustomer.address" class="text-sm text-gray-400 italic">
+                                    <div v-if="!selecteduser.address" class="text-sm text-gray-400 italic">
                                         Aucune information professionnelle renseignée
                                     </div>
                                 </div>

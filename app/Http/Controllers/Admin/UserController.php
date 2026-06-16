@@ -7,15 +7,15 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class CustomerController extends Controller
+class UserController extends Controller
 {
     //
     public function index()
     {
-        $customers = User::where('role', 'customer')->get();
+        $users = User::where('role', '!=', 'admin')->get();
 
-        return Inertia::render('Admin/Customer', [
-            'customers' => $customers
+        return Inertia::render('Admin/Users', [
+            'users' => $users
         ]);
     }
 }

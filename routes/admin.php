@@ -1,9 +1,10 @@
 <?php
 
+use App\Http\Controllers\Admin\AgencyController;
 use App\Http\Controllers\Admin\CategoryController;
-use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\SubscriptionController;
+use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -14,7 +15,8 @@ Route::group(['middleware' => 'admin', 'prefix' => 'admin', 'as' => 'admin.'],fu
 
     Route::get('dashboard', [DashboardController::class, 'index']) -> name('dashboard');
 
-    Route::get('customers', [CustomerController::class, 'index']) -> name('customers');
+    Route::get('users', [UserController::class, 'index']) -> name('users');
+    Route::get('agencies', [AgencyController::class, 'index']) -> name('agencies');
 
     Route::get('categories', [CategoryController::class, 'index']) -> name('categories');
     Route::post('categories', [CategoryController::class, 'store']) -> name('categories.store');
