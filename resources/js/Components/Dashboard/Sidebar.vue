@@ -97,7 +97,7 @@ if(isAdmin.value){
         {
             id: 'projects',
             name: 'Projets Actifs',
-            href: '/admin/projects',
+            href: '/admin/orders',
             icon: Folder,
             badge: 0
         },

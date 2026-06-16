@@ -132,7 +132,7 @@ const hasProposal = (devisItem) => {
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
                     <h1 class="text-2xl sm:text-3xl font-bold" :style="{ color: '#1e002f' }">
-                        Gestion des devis
+                        Suivi des devis
                     </h1>
                     <p class="text-gray-600 mt-1 text-sm sm:text-base">
                         Consultez toutes les demandes de devis et leurs propositions
@@ -305,6 +305,7 @@ const hasProposal = (devisItem) => {
                                     <span class="text-sm font-mono font-medium" :style="{ color: '#1e002f' }">
                                         #{{ devisItem.reference }}
                                     </span>
+                                    <p class="text-xs text-gray-400">{{ formatDate(devisItem.created_at) }}</p>
                                 </td>
                                 <td class="px-6 py-4">
                                     <p class="text-sm font-medium" :style="{ color: '#1e002f' }">{{ devisItem.title }}</p>
