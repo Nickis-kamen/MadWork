@@ -42,7 +42,7 @@ class BalanceController extends Controller
             'method' => $request->method,
             'number' => $request->number,
             'amount' => $request->amount,
-            'status' => 'pending',
+            'status' => 'completed',
         ]);
 
         // Update the user's balance
@@ -108,7 +108,7 @@ class BalanceController extends Controller
             'method' => $request->method,
             'number' => $request->number,
             'amount' => $request->amount,
-            'status' => 'pending',
+            'status' => 'completed',
         ]);
 
         // Update the user's balance
