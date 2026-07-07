@@ -13,7 +13,7 @@ class DevisController extends Controller
     //
     public function index()
     {
-        $agencyId = Auth::user()->agency->id;
+        $agencyId = Auth::user()->agency?->id;
 
         $devis = Devis::with('user', 'service')->where('agency_id', $agencyId)->get();
         // dd($devis->toArray());

@@ -46,7 +46,7 @@ class HomeController extends Controller
         $agencies = Agency::whereHas('user.subscriptions', function ($query) {
             $query->where('status', 'active')
                 ->where('ends_at', '>', now());
-        })->limit(3)->get();
+        })->latest()->limit(3)->get();
 
         $categories = Category::all();
         $projects = Project::with('user', 'category')->limit(3)->latest()->get();

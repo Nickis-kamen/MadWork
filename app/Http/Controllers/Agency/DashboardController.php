@@ -16,11 +16,12 @@ class DashboardController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $agencyId = $user->agency->id;
+
+        $agencyId = $user->agency?->id;
         // Statistiques principales
         $stats = [
             'balance' => $user->balance ? $user->balance->amount : 0,
-            'activeServices' => $user->agency->services()->count(),
+            'activeServices' => $user->agency?->services()->count(),
             'pendingQuotes' => Devis::where('agency_id', $agencyId)->where('status', 'pending')->count()
         ];
 
@@ -32,7 +33,7 @@ class DashboardController extends Controller
         ];
 
         // Services actifs
-        $services = Auth::user()->agency->services()
+        $services = Auth::user()->agency?->services()
             ->limit(5)
             ->get();
 

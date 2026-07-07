@@ -7,6 +7,7 @@ use App\Models\Agency;
 use App\Models\Devis;
 use App\Models\Order;
 use App\Models\Service;
+use App\Models\Subscription;
 use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -22,11 +23,13 @@ class DashboardController extends Controller
         // Chiffre d'affaires total (somme des transactions de type 'sale' et 'deposit' complétées)
         $totalCA = Transaction::where('status', 'completed')
             ->whereIn('type', ['sale', 'deposit', 'subscription'])
+            ->where('user_id', '!=', $user->id)
             ->sum('amount');
 
         // CA du mois en cours
         $monthlyCA = Transaction::where('status', 'completed')
             ->whereIn('type', ['sale', 'deposit', 'subscription'])
+            ->where('user_id', '!=', $user->id)
             ->whereMonth('created_at', now()->month)
             ->whereYear('created_at', now()->year)
             ->sum('amount');
@@ -44,12 +47,11 @@ class DashboardController extends Controller
 
         $fees = $withdrawals * 0.04;
 
-        $subscriptions = Transaction::where('status', 'completed')
-            ->where('type', 'subscription')
+        $subscriptions = Subscription::where('payment_status', 'paid')
             ->sum('amount');
 
         $totalRevenue = $commission + $fees + $subscriptions;
-
+        // dd($totalRevenue, $commission, $fees, $subscriptions);
         // Revenu mensuel
         $monthlySale = Transaction::where('status', 'completed')
             ->whereIn('type', ['sale'])
@@ -67,8 +69,7 @@ class DashboardController extends Controller
 
         $monthlyFees = $monthlyWithdrawals * 0.04;
 
-        $monthlySubscriptions = Transaction::where('status', 'completed')
-            ->where('type', 'subscription')
+        $monthlySubscriptions = Subscription::where('payment_status', 'paid')
             ->whereMonth('created_at', now()->month)
             ->whereYear('created_at', now()->year)
             ->sum('amount');

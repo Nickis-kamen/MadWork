@@ -13,7 +13,7 @@ class ServiceController extends Controller
     //
     public function index(Request $request)
     {
-        $query = Service::with(['agency', 'category'])
+        $query = Service::with(['agency', 'category'])->latest()
             ->whereHas('agency.user.subscriptions', function ($query) {
                 $query->where('status', 'active')
                     ->where('ends_at', '>', now());

@@ -226,7 +226,7 @@ const formatAmount = (amount) => {
                         </Link>
                     </div>
                     <div class="p-5">
-                        <div v-if="services.length > 0" class="space-y-3">
+                        <div v-if="services" class="space-y-3">
                             <div
                                 v-for="service in services"
                                 :key="service.id"

@@ -13,7 +13,7 @@ class OrderController extends Controller
     //
     public function index()
     {
-        $agencyId = Auth::user()->agency->id;
+        $agencyId = Auth::user()->agency?->id;
         $orders = Order::with('service', 'client', 'devis')->where('agency_id', $agencyId)->get();
 
         return Inertia::render('Agency/Order', [
@@ -35,7 +35,7 @@ class OrderController extends Controller
         $order = Order::where('agency_id', $agencyId)
             ->where('id', $id)
             ->firstOrFail();
-            
+
         if($request->status === 'completed')
         {
             $progress = 100;

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
             $table->string('reference')->unique();
-            $table->foreignId('user_id')->constrained()->nullOnDelete();
+            $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
             $table->enum('type', ['deposit', 'withdrawal', 'purchase', 'sale', 'subscription']);
             $table->enum('payment_stage', ['first','final'])->nullable();
             $table->enum('method', ['mvola', 'airtelmoney', 'orangemoney', 'visa'])->nullable();

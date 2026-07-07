@@ -810,9 +810,9 @@ const setFilter = (filter) => {
                             {{ getStatusInfo(selectedTransaction.status).label }}
                         </span>
                     </div>
-                    <Link v-if="selectedTransaction.status === 'pending' && (selectedTransaction.type === 'purchase' || selectedTransaction.type === 'sale') && selectedTransaction.reference"
+                    <Link v-if="selectedTransaction.status === 'pending' && (selectedTransaction.type === 'purchase' || selectedTransaction.type === 'sale' || selectedTransaction.type === 'subscription') && selectedTransaction.reference"
                          class="mt-4 w-full inline-block text-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                    :href="`/payment/${ selectedTransaction.reference }`" >
+                    :href="selectedTransaction.type === 'subscription' ? `/agency/payment/${selectedTransaction.reference}` : `/payment/${selectedTransaction.reference}`">
                         Payer maintenant
                     </Link>
                     <!-- Référence et date -->

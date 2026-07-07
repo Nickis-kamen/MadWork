@@ -93,7 +93,7 @@ if(isAdmin.value){
             name: 'Demandes Devis',
             href: '/admin/devis',
             icon: FileText,
-            badge: 3
+            badge: 0
         },
         {
             id: 'projects',
@@ -148,7 +148,7 @@ if(isAgency.value){
             name: 'Mes Devis',
             href: '/agency/my-devis',
             icon: FileText,
-            badge: 3
+            badge: 0
         },
         {
             id: 'projects',

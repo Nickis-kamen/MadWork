@@ -76,7 +76,9 @@ class DevisController extends Controller
             'cdc_file' => $path,
         ]);
 
-        Mail::to($service->agency->email)->send(new DemandeDevisEmail(Auth::user()));
+        $agencyEmail = $service->agency->user->email;
+        
+        Mail::to($agencyEmail)->send(new DemandeDevisEmail(Auth::user()));
 
         return redirect('/my-devis')->with([
             'message' => 'Demande de devis soumise avec succès !',
