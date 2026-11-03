@@ -140,7 +140,7 @@ const handleImageUpload = (e) => {
                         class="mt-1 block w-full text-sm py-1.5"
                         v-model="form.phone"
                         required
-                        placeholder="06 12 34 56 78"
+                        placeholder=""
                     />
                     <InputError class="mt-1 text-xs" :message="form.errors.phone" />
                 </div>
@@ -167,7 +167,7 @@ const handleImageUpload = (e) => {
                         class="mt-1 block w-full text-sm py-1.5"
                         v-model="form.address"
                         required
-                        placeholder="123 Rue Example, 75001 Paris"
+                        placeholder="Itaosy, Antananarivo"
                     />
                     <InputError class="mt-1 text-xs" :message="form.errors.address" />
                 </div>
