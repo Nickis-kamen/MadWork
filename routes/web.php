@@ -1,15 +1,36 @@
 <?php
 
+use App\Http\Controllers\AgencyController;
+use App\Http\Controllers\BalanceController;
+use App\Http\Controllers\ContactController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\ServiceController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
-Route::get('/', function () {
-    return Inertia::render('Welcome');
+
+Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/services', [ServiceController::class, 'index'])->name('services.index');
+Route::get('/services/{service}', [ServiceController::class, 'show'])->name('services.show');
+Route::get('/agencies/{agency}', [AgencyController::class, 'show'])->name('agencies.show');
+Route::get('/projects', [ProjectController::class, 'index'])->name('projects.index');
+Route::get('/project/{project}', [ProjectController::class, 'show'])->name('projects.show');
+
+Route::post('/contact', [ContactController::class, 'send'])->name('contact.send');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/balance', [BalanceController::class, 'index'])->name('balance.index');
+    Route::post('/balance/deposit', [BalanceController::class, 'deposit'])->name('balance.deposit');
+    Route::post('/balance/withdraw', [BalanceController::class, 'withdraw'])->name('balance.withdraw');
+
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
-Route::get('/test', function () {
-    // sleep(2);
-    return Inertia::render('Test');
-});
+
+require __DIR__.'/auth.php';
+require __DIR__.'/admin.php';
+require __DIR__.'/customer.php';
+require __DIR__.'/agency.php';

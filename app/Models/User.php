@@ -19,8 +19,16 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'first_name',
         'email',
         'password',
+        'verification_token',
+        'image',
+        'phone',
+        'address',
+        'date_of_birth',
+        'role',
+        'category_id',
     ];
 
     /**
@@ -31,6 +39,7 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'verification_token'
     ];
 
     /**
@@ -44,5 +53,40 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function devis()
+    {
+        return $this->hasMany(Devis::class);
+    }
+
+    public function agency()
+    {
+        return $this->hasOne(Agency::class);
+    }
+
+    public function categories()
+    {
+        return $this->belongsTo(Category::class);
+    }
+
+    public function balance()
+    {
+        return $this->hasOne(Balance::class);
+    }
+
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class);
+    }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class, 'client_id');
+    }
+
+    public function subscriptions()
+    {
+        return $this->hasMany(Subscription::class, 'agency_id');
     }
 }

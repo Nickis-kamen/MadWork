@@ -14,9 +14,18 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('first_name');
             $table->string('email')->unique();
+            $table->string('image')->nullable();
+            $table->boolean('is_verified')->default(false);
+            $table->string('verification_token')->nullable();
+            $table->date('date_of_birth');
+            $table->enum('role', ['customer', 'agency', 'admin'])->default('customer');
+            $table->string('phone');
+            $table->string('address');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->foreignId('category_id')->nullable()->constrained()->nullOnDelete();
             $table->rememberToken();
             $table->timestamps();
         });
